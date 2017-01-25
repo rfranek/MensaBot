@@ -14,13 +14,13 @@ namespace MensaBotParsing
         {
             List<CanteenElement> canteen = new List<CanteenElement>();
 
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-unten/", "UniCampus unten"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-oben/", "UniCampus oben"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-kellercafe/speiseplan/", "Kellercafé"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-herrenkrug/speiseplan/", "Herrenkrug"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-stendal/speiseplan/", "Stendal"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-wernigerode/speiseplan/", "Wernigerode"));
-            canteen.Add(new CanteenElement("https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-halberstadt/speiseplan/", "Halberstadt"));
+            canteen.Add(new CanteenElement("HiddenLinkn-unten/", "UniCampus unten"));
+            canteen.Add(new CanteenElement("HiddenLinkn-oben/", "UniCampus oben"));
+            canteen.Add(new CanteenElement("HiddenLinkan/", "Kellercafé"));
+            canteen.Add(new CanteenElement("HiddenLinkan/", "Herrenkrug"));
+            canteen.Add(new CanteenElement("HiddenLink", "Stendal"));
+            canteen.Add(new CanteenElement("HiddenLinklan/", "Wernigerode"));
+            canteen.Add(new CanteenElement("HiddenLinklan/", "Halberstadt"));
 
             for (int i = 0; i < canteen.Count; i++)
             {
