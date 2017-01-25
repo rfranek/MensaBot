@@ -1,28 +1,38 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MensaBotParsing
+namespace MensaBotParsing.Mensa
 {
+    using System.Collections.Generic;
+
     class FoodElement
     {
-        public String GermanName { get; private set; }
-        public String EnglishName { get; private set; }
-        public String Price { get; private set; }
-        public List<FoodTags> Tags { get; private set; }
-        public String AdditivesAndAllergenics { get; private set; }
+        #region properties
 
-        public FoodElement(String germanName, String englishName, String price, List<FoodTags> tags, String additivesAndAllergenics)
+        public string AdditivesAndAllergenics { get; private set; }
+
+        public string EnglishName { get; private set; }
+
+        public string GermanName { get; private set; }
+
+        public string Price { get; private set; }
+
+        public List<FoodTags> Tags { get; private set; }
+
+        #endregion
+
+        #region constructors and destructors
+
+        public FoodElement(string germanName, string englishName, string price, List<FoodTags> tags, string additivesAndAllergenics)
         {
-            this.GermanName = germanName;
-            this.EnglishName = englishName;
-            this.Price = price;
-            this.Tags = tags;
-            this.AdditivesAndAllergenics = additivesAndAllergenics;
+            GermanName = germanName;
+            EnglishName = englishName;
+            Price = price;
+            Tags = tags;
+            AdditivesAndAllergenics = additivesAndAllergenics;
         }
 
+        #endregion
     }
 
     public enum FoodTags
@@ -40,6 +50,5 @@ namespace MensaBotParsing
         VENSION,
         BIO,
         HOGGET
-
     }
 }
