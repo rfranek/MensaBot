@@ -250,3 +250,14 @@ paket-files/
 # JetBrains Rider
 .idea/
 *.sln.iml
+/MensaBotApplication/MensaBot/MensaBot/Web.config
+*Web.config
+/MensaBotApplication/MensaBot/MensaBot/Web.Debug.config
+/MensaBotApplication/MensaBot/MensaBot/Web.Release.config
+/MensaBotApplication/MensaBot/MensaBot/packages.config
+/MensaBotApplication/MensaBot/MensaBot/default.htm
+/MensaBotApplication/MensaBot/MensaBot/mensa_web_bot.png
+/MensaBotApplication/MensaBot/MensaBot/apiapp.json
+/MensaBotApplication/MensaBot/MensaBot/Global.asax.cs
+/MensaBotApplication/MensaBot/MensaBot/Global.asax
+/MensaBotApplication/MensaBot/MensaBot/Metadata/deploymentTemplates/apiappconfig.azureresource.json
