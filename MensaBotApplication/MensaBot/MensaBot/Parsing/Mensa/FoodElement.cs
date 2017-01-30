@@ -55,7 +55,7 @@ namespace MensaBotParsing.Mensa
                 case FoodTags.VEGETARIAN:
                     return "🌽";
                 case FoodTags.VEGAN:
-                    return "🌻";
+                    return "🌱";
                 case FoodTags.BIO:
                     return "✅";
                 case FoodTags.VITAL:

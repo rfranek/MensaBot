@@ -9,6 +9,8 @@ namespace MensaBotParsing.Mensa
     using System.Text;
     using System.Text.RegularExpressions;
 
+    using MensaBot.MessageInterpretation;
+
     class CanteenElement
     {
         #region constants
@@ -37,25 +39,28 @@ namespace MensaBotParsing.Mensa
 
         public List<DayElement> DayElements { get; private set; }
 
-        public string [] GermanNames { get; private set; }
-        public string[] EnglishNames { get; private set; }
+        public string [] GermanDescriptions { get; private set; }
+        public string[] EnglishDescriptions { get; private set; }
+        public CanteenName CanteenName { get; private set; }
 
         #endregion
 
         #region constructors and destructors
 
-        public CanteenElement(string[] pages, string[] names)
+        public CanteenElement(CanteenName canteenName, string[] pages, string[] descriptions)
         {
-            _pages = pages;
-            GermanNames = names;
-            EnglishNames = names;
+            this._pages = pages;
+            this.CanteenName = canteenName;
+            this.GermanDescriptions = descriptions;
+            this.EnglishDescriptions = descriptions;
         }
 
-        public CanteenElement(string[] pages, string [] germanNames, string[] englishNames)
+        public CanteenElement(CanteenName canteenName ,string[] pages, string [] germanDescriptions, string[] englishDescriptions)
         {
-            _pages = pages;
-            GermanNames = germanNames;
-            EnglishNames = englishNames;
+            this._pages = pages;
+            this.CanteenName = canteenName;
+            this.GermanDescriptions = germanDescriptions;
+            this.EnglishDescriptions = englishDescriptions;
         }
 
         #endregion

@@ -45,9 +45,8 @@ namespace MensaBot.MessageInterpretation
             text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("german") + ": /mensa, /kantine, /futtern, /schnabulieren ..." + MessageInterpreter.LineBreak;
             text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("english") + ": /canteen, /menu, /nosh, /eat ...";
             text += MessageInterpreter.DrawLine;
-            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("german") + ": z.B.: campus, campus_unten, unten, campus_oben, oben, kellercafe, herrenkrug ...."
-                    + MessageInterpreter.LineBreak;
-            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("english") + ": e.g: campus, campus_lower, campus_upper, kellercafe, cellar_cafe, herrenkrug ....";
+            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("german") + ": /list mensen - Zeigt alle verfügbaren Mensen und ihre Befehlsbezeichnungen." + MessageInterpreter.LineBreak;
+            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("english") + ": /list canteens - Shows all canteens and their shortcuts.";
             text += MessageInterpreter.DrawLine;
             text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("german") + ": z.B.: heute, morgen, übermorgen" + MessageInterpreter.LineBreak;
             text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("english") + ": e.g: today, tomorrow, the_day_after_tomorrow";
@@ -116,17 +115,6 @@ namespace MensaBot.MessageInterpretation
                 return new string[] { "Could not find canteen with name " + MessageInterpreter.MarkBold(messageParts[1])};
             }
 
-            DateIndex dateIndex = DateIndex.TODAY;
-
-            if (messageParts.Length > 2)
-            {
-                dateIndex = MessageInterpreter.Get.FindDate(messageParts[2], key);
-                if (dateIndex == DateIndex.none)
-                {
-                    return new string[] { "Could not find date with name " + MessageInterpreter.MarkBold(messageParts[2])};
-                }
-            }
-
             try
             {
                 if (_canteens == null)
@@ -139,8 +127,19 @@ namespace MensaBot.MessageInterpretation
                 return new string[] { "Fail to load information about " + MessageInterpreter.MarkBold(messageParts[1])};
             }
 
+            DateIndex dateIndex = DateIndex.TODAY;
+
+            if (messageParts.Length > 2)
+            {
+                dateIndex = MessageInterpreter.Get.FindDate(messageParts[2], key);
+                if (dateIndex == DateIndex.none)
+                {
+                    return new string[] { "Could not find date with name " + MessageInterpreter.MarkBold(messageParts[2]) };
+                }
+            }
+
             //Find correct date element.
-            DateTime now = DateTime.Now.ToUniversalTime().AddDays((int)dateIndex);
+            DateTime now = DateTime.Now.ToUniversalTime().AddDays((int)dateIndex).AddHours(1);
             DayElement[] dayElements = null;
 
             try
@@ -160,7 +159,7 @@ namespace MensaBot.MessageInterpretation
             //List all elements for dayElement
             for (int i = 0; i < dayElements.Length; i++)
             {
-                menuItems[i] = (key == LanguageKey.DE ? "Speiseplan für" : "Menu for") + ":" + MessageInterpreter.LineBreak + MessageInterpreter.MarkBold((key == LanguageKey.DE ? _canteens[(int)canteenName].GermanNames[i] : _canteens[(int)canteenName].EnglishNames[i])) + " "
+                menuItems[i] = (key == LanguageKey.DE ? "Speiseplan für" : "Menu for") + ":" + MessageInterpreter.LineBreak + MessageInterpreter.MarkBold((key == LanguageKey.DE ? _canteens[(int)canteenName].GermanDescriptions[i] : _canteens[(int)canteenName].EnglishDescriptions[i])) + " "
                                + (key == LanguageKey.DE ? "am  " : "at ") + MessageInterpreter.MarkItalic(dayElements[i].Date.ToString("dd.MM.yyyy"))
                                + MessageInterpreter.DrawLine;
 
@@ -211,19 +210,44 @@ namespace MensaBot.MessageInterpretation
             return text;
         }
 
+        public string CreateListCanteensMessage(LanguageKey key)
+        {
+            if(_canteens == null) CreateCanteenInfo();
+
+            string text = MessageInterpreter.MarkBold((key == LanguageKey.DE) ? "Auflistung aller Mensen und ihrer Befehlsbezeichnung:": "List of all canteens and their shortcuts:");
+            text += MessageInterpreter.DrawLine;
+
+            for (int i = 0; i < _canteens.Count; i++)
+            {
+                foreach (var description in (key == LanguageKey.DE) ? _canteens[i].GermanDescriptions : _canteens[i].EnglishDescriptions)
+                {
+                    text += MessageInterpreter.MarkBold(description) + ", ";
+                }
+                text = text.Substring(0, text.Length - 2);
+                text += ": ";
+                foreach (var coName in MessageInterpreter.Get.FindCanteenNames(_canteens[i].CanteenName, key))
+                {
+                    text += coName + ", ";
+                }
+                text = text.Substring(0, text.Length - 2) + MessageInterpreter.LineBreak;
+            }
+
+            return text;
+        }
+
         private void CreateCanteenInfo()
         {
             _canteens = new List<CanteenElement>();
 
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-unten/"}, new string[] { "Uni-Campus unterer Speisesaal"}, new string[] { "Uni-Campus lower hall" }));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-oben/"}, new string[] { "Uni-Campus oberer Speisesaal" }, new string[] { "Uni-Campus upper hall" }));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-kellercafe/speiseplan/"}, new string[] { "Kellercafé"}));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-herrenkrug/speiseplan/"}, new string[] { "Herrenkrug"}));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-stendal/speiseplan/"}, new string[] { "Stendal"}));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-wernigerode/speiseplan/"}, new string[] { "Wernigerode"}));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-halberstadt/speiseplan/"}, new string[] { "Halberstadt"}));
-            _canteens.Add(new CanteenElement(new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-unten/",
-                                                            "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-oben/" }, new string[] { "Uni-Campus unterer Speisesaal", "Uni-Campus oberer Speisesaal" }, new string[] { "Uni-Campus lower hall", "Uni-Campus upper hall" }));
+            _canteens.Add(new CanteenElement(CanteenName.LOWER_HALL, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-unten/"}, new string[] { "Uni-Campus unterer Speisesaal"}, new string[] { "Uni-Campus lower hall" }));
+            _canteens.Add(new CanteenElement(CanteenName.UPPER_HALL, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-oben/"}, new string[] { "Uni-Campus oberer Speisesaal" }, new string[] { "Uni-Campus upper hall" }));
+            _canteens.Add(new CanteenElement(CanteenName.KELLERCAFE, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-kellercafe/speiseplan/"}, new string[] { "Kellercafé"}));
+            _canteens.Add(new CanteenElement(CanteenName.HERRENKRUG, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-herrenkrug/speiseplan/"}, new string[] { "Herrenkrug"}));
+            _canteens.Add(new CanteenElement(CanteenName.STENDAL, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-stendal/speiseplan/"}, new string[] { "Stendal"}));
+            _canteens.Add(new CanteenElement(CanteenName.WERNIGERODE, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-wernigerode/speiseplan/"}, new string[] { "Wernigerode"}));
+            _canteens.Add(new CanteenElement(CanteenName.HALBERSTADT, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-halberstadt/speiseplan/"}, new string[] { "Halberstadt"}));
+            _canteens.Add(new CanteenElement(CanteenName.UPPER_HALL_LOWER_HALL, new string[] { "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-unten/",
+                                                                                               "https://www.studentenwerk-magdeburg.de/mensen-cafeterien/mensa-unicampus/speiseplan-oben/" }, new string[] { "Uni-Campus unterer Speisesaal", "Uni-Campus oberer Speisesaal" }, new string[] { "Uni-Campus lower hall", "Uni-Campus upper hall" }));
         }
 
         #endregion

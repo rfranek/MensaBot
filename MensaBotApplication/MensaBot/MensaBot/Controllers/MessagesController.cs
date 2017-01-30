@@ -52,7 +52,16 @@ namespace MensaBot
                 if (activity.Text.StartsWith("/ping"))
                 {
                     if (_random.Next(10) > 8)
-                        await connector.Conversations.ReplyToActivityAsync(activity.CreateReply("Pong!"));
+                        await connector.Conversations.ReplyToActivityAsync(activity.CreateReply("Pong! 🏓"));
+                    else
+                        await connector.Conversations.ReplyToActivityAsync(activity.CreateReply("I do not play ping pong."));
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+
+                if (activity.Text.StartsWith("/pong"))
+                {
+                    if (_random.Next(10) > 8)
+                        await connector.Conversations.ReplyToActivityAsync(activity.CreateReply("Ping! 🏓"));
                     else
                         await connector.Conversations.ReplyToActivityAsync(activity.CreateReply("I do not play ping pong."));
                     return Request.CreateResponse(HttpStatusCode.OK);
@@ -60,13 +69,25 @@ namespace MensaBot
 
                 if (activity.Text.StartsWith("/legende"))
                 {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateHelpMessage(LanguageKey.DE)));
+                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateKeyMessage(LanguageKey.DE)));
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }
 
                 if (activity.Text.StartsWith("/key"))
                 {
                     await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateKeyMessage(LanguageKey.EN)));
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+
+                if (activity.Text.StartsWith("/list canteen") || activity.Text.StartsWith("/list" + _botHandle + " canteen"))
+                {
+                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateListCanteensMessage(LanguageKey.EN)));
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+
+                if (activity.Text.StartsWith("/list mensen") || activity.Text.StartsWith("/list" + _botHandle + " mensen"))
+                {
+                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateListCanteensMessage(LanguageKey.DE)));
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }
 
@@ -79,7 +100,7 @@ namespace MensaBot
                 LanguageKey key = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, messageParts[0]);
                 if (key == LanguageKey.none)
                 {
-                    Activity reply = activity.CreateReply(MessageInterpreter.MarkBold("Unknown command!)" + " - Please do usefull things, otherwise you still will be hungry." + MessageInterpreter.LineBreak + "Use \"/help\" for help."));
+                    Activity reply = activity.CreateReply(MessageInterpreter.MarkBold("Unknown command!") + " - Please do usefull things, otherwise you still will be hungry." + MessageInterpreter.LineBreak + "Use " + MessageInterpreter.MarkBold("\"/help\"") + " for help.");
                     await connector.Conversations.ReplyToActivityAsync(reply);
                     return Request.CreateResponse(HttpStatusCode.OK);
                 }

@@ -25,6 +25,7 @@ namespace MensaBot.MessageInterpretation
         private readonly CommandAlternatives _canteenNameWernigerode;
         private readonly CommandAlternatives _canteenNameLowerHall;
         private readonly CommandAlternatives _canteenNameUpperHall;
+        private readonly CommandAlternatives _canteenNameStendal;
         private readonly CommandAlternatives _canteenNameLowerOrUpper;
 
         private readonly CommandAlternatives _dateNames;
@@ -51,32 +52,36 @@ namespace MensaBot.MessageInterpretation
             _dateNames.ReplaceCommands(LanguageKey.EN, new[] { "today", "tomorrow", "the_day_after_tomorrow" });
 
             _canteenNameLowerHall = new CommandAlternatives();
-            _canteenNameLowerHall.ReplaceCommands(LanguageKey.DE, new[] { "unten", "campus_unten", "mensa_unten", "erdgeschoss" });
-            _canteenNameLowerHall.ReplaceCommands(LanguageKey.EN, new[] { "lower", "campus_lower", "canteen_lower", "main_floor", "lower_hall" });
+            _canteenNameLowerHall.ReplaceCommands(LanguageKey.DE, new[] { "u", "unten", "campus_unten", "mensa_unten", "erdgeschoss" });
+            _canteenNameLowerHall.ReplaceCommands(LanguageKey.EN, new[] { "l", "lower", "campus_lower", "canteen_lower", "main_floor", "lower_hall" });
 
             _canteenNameUpperHall = new CommandAlternatives();
-            _canteenNameUpperHall.ReplaceCommands(LanguageKey.DE, new[] { "oben", "campus_oben", "mensa_oben", "obergeschoss" });
-            _canteenNameUpperHall.ReplaceCommands(LanguageKey.EN, new[] { "upper", "campus_upper", "canteen_upper", "upper_floor", "upper_hall" });
+            _canteenNameUpperHall.ReplaceCommands(LanguageKey.DE, new[] { "o", "oben", "campus_oben", "mensa_oben", "obergeschoss" });
+            _canteenNameUpperHall.ReplaceCommands(LanguageKey.EN, new[] { "u", "upper", "campus_upper", "canteen_upper", "upper_floor", "upper_hall" });
 
             _canteenNameLowerOrUpper = new CommandAlternatives();
-            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.DE, new[] { "campus", "unten&oben", "oben&unten", "uni_campus" });
-            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.EN, new[] { "campus", "lower&upper", "upper&lower", "uni_campus" });
+            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.DE, new[] { "c", "campus", "unten&oben", "oben&unten", "uni_campus" });
+            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.EN, new[] { "c", "campus", "lower&upper", "upper&lower", "uni_campus" });
 
             _canteenNameKellerCafe = new CommandAlternatives();
-            _canteenNameKellerCafe.ReplaceCommands(LanguageKey.DE, new[] { "keller", "kellercafe", "kellercafé" });
-            _canteenNameKellerCafe.ReplaceCommands(LanguageKey.EN, new[] { "cellar", "kellercafe", "cellar_cafe", "cellar_café", "basement", "basementcafe", "basementcafé" });
+            _canteenNameKellerCafe.ReplaceCommands(LanguageKey.DE, new[] { "k", "keller", "kellercafe", "kellercafé" });
+            _canteenNameKellerCafe.ReplaceCommands(LanguageKey.EN, new[] { "c", "cellar", "kellercafe", "cellar_cafe", "cellar_café", "basement", "basementcafe", "basementcafé" });
 
             _canteenNameHerrenkrug = new CommandAlternatives();
-            _canteenNameHerrenkrug.ReplaceCommands(LanguageKey.DE, new[] { "herrenkrug", "krug", "herren" });
-            _canteenNameHerrenkrug.ReplaceCommands(LanguageKey.EN, new[] { "herrenkrug", "krug" });
+            _canteenNameHerrenkrug.ReplaceCommands(LanguageKey.DE, new[] { "he", "herrenkrug", "krug", "herren" });
+            _canteenNameHerrenkrug.ReplaceCommands(LanguageKey.EN, new[] { "he", "herrenkrug", "krug" });
 
             _canteenNameWernigerode = new CommandAlternatives();
-            _canteenNameWernigerode.ReplaceCommands(LanguageKey.DE, new[] { "wernigerode", "rode", "wernig" });
-            _canteenNameWernigerode.ReplaceCommands(LanguageKey.EN, new[] { "wernigerode", "rode", "wernig" });
+            _canteenNameWernigerode.ReplaceCommands(LanguageKey.DE, new[] { "w", "wernigerode", "rode", "wernig" });
+            _canteenNameWernigerode.ReplaceCommands(LanguageKey.EN, new[] { "w", "wernigerode", "rode", "wernig" });
 
             _canteenNameHalberstadt = new CommandAlternatives();
-            _canteenNameHalberstadt.ReplaceCommands(LanguageKey.DE, new[] { "halberstadt", "halber" });
-            _canteenNameHalberstadt.ReplaceCommands(LanguageKey.EN, new[] { "halberstadt", "halber" });
+            _canteenNameHalberstadt.ReplaceCommands(LanguageKey.DE, new[] { "ha", "halberstadt", "halber" });
+            _canteenNameHalberstadt.ReplaceCommands(LanguageKey.EN, new[] { "ha", "halberstadt", "halber" });
+
+            _canteenNameStendal = new CommandAlternatives();
+            _canteenNameStendal.ReplaceCommands(LanguageKey.DE, new[] { "s", "stendal" });
+            _canteenNameStendal.ReplaceCommands(LanguageKey.EN, new[] { "s", "stendal" });
         }
 
         #endregion
@@ -117,10 +122,36 @@ namespace MensaBot.MessageInterpretation
                 return CanteenName.HERRENKRUG;
             if (_canteenNameKellerCafe.Contains(messagePart, languageKey))
                 return CanteenName.KELLERCAFE;
+            if (_canteenNameStendal.Contains(messagePart, languageKey))
+                return CanteenName.STENDAL;
             if (_canteenNameLowerOrUpper.Contains(messagePart, languageKey))
                 return CanteenName.UPPER_HALL_LOWER_HALL;
 
             return CanteenName.none;
+        }
+
+        public string [] FindCanteenNames(CanteenName name, LanguageKey languageKey)
+        {
+            switch (name)
+            {
+                case CanteenName.LOWER_HALL:
+                    return this._canteenNameLowerHall.listCommands(languageKey);
+                case CanteenName.UPPER_HALL:
+                    return this._canteenNameUpperHall.listCommands(languageKey);
+                case CanteenName.HERRENKRUG:
+                    return this._canteenNameHerrenkrug.listCommands(languageKey);
+                case CanteenName.HALBERSTADT:
+                    return this._canteenNameHalberstadt.listCommands(languageKey);
+                case CanteenName.KELLERCAFE:
+                    return this._canteenNameKellerCafe.listCommands(languageKey);
+                case CanteenName.STENDAL:
+                    return this._canteenNameStendal.listCommands(languageKey);
+                case CanteenName.WERNIGERODE:
+                    return this._canteenNameWernigerode.listCommands(languageKey);
+                case CanteenName.UPPER_HALL_LOWER_HALL:
+                    return this._canteenNameLowerOrUpper.listCommands(languageKey);
+            }
+            return new[] { "" };
         }
 
         public DateIndex FindDate(string messagePart, LanguageKey key)

@@ -65,6 +65,17 @@ namespace MensaBot.MessageInterpretation
             return values != null && values.Contains(value);
         }
 
+        public string[] listCommands(LanguageKey key)
+        {
+            string[] commands = null;
+            try
+            {
+                _dictionary.TryGetValue(key.ToString(), out commands);
+            }catch(Exception e) { }
+
+            return commands;
+        }
+
         public int IndexOf (string value, LanguageKey key)
         {
             string[] values;
