@@ -158,7 +158,7 @@ namespace MensaBot.MessageInterpretation
 
         public string [] CreateMensaReply(LanguageKey key, string paramFirst, string paramSecond, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
-            
+            bool isShortRequest = false;
             //check if paramFirst is date, if true -> change order
             if (!string.IsNullOrEmpty(paramFirst) && string.IsNullOrEmpty(paramSecond))
             {
@@ -174,8 +174,10 @@ namespace MensaBot.MessageInterpretation
             {
                 paramFirst = DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
 
-                if(string.IsNullOrEmpty(paramFirst))
-                    return new string[] { "Please add " + MessageInterpreter.MarkBold("mensa name") + "!"};
+                if (string.IsNullOrEmpty(paramFirst))
+                    return new string[] { "Please add " + MessageInterpreter.MarkBold("mensa name") + "!" };
+                else
+                    isShortRequest = true;
 
             }
 
@@ -216,7 +218,24 @@ namespace MensaBot.MessageInterpretation
 
             try
             {
-                dayElements = _canteens[(int)canteenName].DayElements.FindAll(t => t.Date.Day == now.Day).ToArray();
+                if (isShortRequest)
+                {
+                    int maxDays = 3;
+                    for (int i = 0; i < maxDays; i++)
+                    {
+                        if(i==0 && now.Hour>16)//TODO read close time via website
+                            continue;
+
+                        dayElements = _canteens[(int)canteenName].DayElements.FindAll(t => t.Date.Day == now.AddDays(i).Day).ToArray();
+                        if (dayElements != null && dayElements.Length != 0)
+                            break;
+                    }
+
+                }
+                else
+                {
+                    dayElements = _canteens[(int)canteenName].DayElements.FindAll(t => t.Date.Day == now.Day).ToArray();
+                }
             }
             catch (Exception e)
             {
@@ -227,8 +246,6 @@ namespace MensaBot.MessageInterpretation
             {
                 return new string[] { key == LanguageKey.DE ? MessageInterpreter.MarkBold("Es konnten keine Informationen für den " + now.ToString("dd.MM.yyyy") + " gefunden werden. 💔") : MessageInterpreter.MarkBold("Could not find information for " + now.ToString("dd.MM.yyyy") + ". 💔")};
             }
-
-            string [] menuItems = new string[dayElements.Length];
 
             IEnumerable<FoodTags> filter = null;
             try
@@ -244,10 +261,12 @@ namespace MensaBot.MessageInterpretation
                 filter = null;
             }
 
+            string[] menuItems = new string[dayElements.Length];
 
             //List all elements for dayElement
             for (int i = 0; i < dayElements.Length; i++)
             {
+                var sssx = i;
                 menuItems[i] = (key == LanguageKey.DE ? "Speiseplan für" : "Menu for") + ":" + MessageInterpreter.LineBreak + MessageInterpreter.MarkBold((key == LanguageKey.DE ? _canteens[(int)canteenName].GermanDescriptions[i] : _canteens[(int)canteenName].EnglishDescriptions[i])) + " "
                                + (key == LanguageKey.DE ? "am  " : "at ") + MessageInterpreter.MarkItalic(dayElements[i].Date.ToString("dd.MM.yyyy"))
                                + MessageInterpreter.DrawLine;

@@ -131,8 +131,8 @@ namespace MensaBot
                     if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/set help"))
                     {
                         var message = MessageInterpreter.MarkBold("Help for /set") + MessageInterpreter.DrawLine
-                                    + "Use: /set canteen [canteenname] for update the default mensa." + MessageInterpreter.DrawLine 
-                                    + "Use: /set filter [filterA],[filterB].... for update filter. E.g. /set filter vegan,pork..." ;
+                                    + "Use: /set canteen [canteenname] to update the default mensa." + MessageInterpreter.DrawLine 
+                                    + "Use: /set filter [filterA],[filterB].... to ignore meals with given tags, e.g. /set filter vegan,pork...";
 
                         return await SendResponseMessage(connector, activity, message);
                     }
@@ -140,7 +140,7 @@ namespace MensaBot
                     string[] setMessageParts = activity.Text.Remove(0, 1).Replace(_botHandle,"").ToLower().Split(' ');
 
                     if (setMessageParts.Length != 3)
-                        return await SendResponseMessage(connector, activity, "Did you mean: /set canteen [canteenname] or /set mensa [mensaname]");
+                        return await SendResponseMessage(connector, activity, "This did not work. Use: /set help");
 
                     LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setMessageParts[1]);
 
@@ -182,7 +182,7 @@ namespace MensaBot
                         tagsAsStringGerman += FoodElement.FoodTagsToGermanString(tags[tags.Count - 1]);
 
                         if (DatabaseUtilities.AddEntry(DatabaseUtilities.IgnoreTags, tagsAsStringEnglish, mbe, activity.ChannelId, activity.Conversation.Id))
-                          return await SendResponseMessage(connector, activity,"Tags werden nun ignoriert: "+ MessageInterpreter.MarkBold(tagsAsStringGerman) + MessageInterpreter.LineBreak +"Added tags to ignore list: "+ MessageInterpreter.MarkBold(tagsAsStringEnglish));
+                          return await SendResponseMessage(connector, activity,"Tags werden nun herausgefiltert: "+ MessageInterpreter.MarkBold(tagsAsStringGerman) + MessageInterpreter.LineBreak +"Added tags to ignore list: "+ MessageInterpreter.MarkBold(tagsAsStringEnglish));
                         else
                             return await SendResponseMessage(connector, activity, "Tags konnten nicht gesetzt werden." + MessageInterpreter.LineBreak + "Could not add tags.");
                     }
