@@ -5,6 +5,8 @@ namespace MensaBotParsing.Mensa
 {
     using System.Collections.Generic;
 
+    using MensaBot.MessageInterpretation;
+
     class FoodElement
     {
         #region properties
@@ -72,6 +74,44 @@ namespace MensaBotParsing.Mensa
             }
         }
 
+        public static string FoodTagsToGermanString(FoodTags tag)
+        {
+            switch (tag)
+            {
+                case FoodTags.PORK:
+                    return "Schwein";
+                case FoodTags.CHICKEN:
+                    return "Hühnchen";
+                case FoodTags.FISH:
+                    return "Fisch";
+                case FoodTags.ALCOHOL:
+                    return "Alkohol";
+                case FoodTags.HOGGET:
+                    return "Lamm";
+                case FoodTags.BEEF:
+                    return "Rindfleisch";
+                case FoodTags.VEGETARIAN:
+                    return "Vegetarisch";
+                case FoodTags.VEGAN:
+                    return "Vegan";
+                case FoodTags.BIO:
+                    return "BIO";
+                case FoodTags.VITAL:
+                    return "Vital";
+                case FoodTags.SOUP:
+                    return "Suppe";
+                case FoodTags.GARLIC:
+                    return "Knoblauch";
+                case FoodTags.VENSION:
+                    return "Wild";
+
+                default:
+                    return tag.ToString();
+            }
+        }
+
+
+
         #endregion
     }
 
@@ -91,6 +131,6 @@ namespace MensaBotParsing.Mensa
         BIO,
         HOGGET,
 
-        size
+        NONE_FOOD_TAG
     }
 }

@@ -9,6 +9,7 @@ namespace MensaBot.MessageInterpretation
     {
 
         public const string DefaultMensaTag = "DefaultCanteen";
+        public const string IgnoreTags = "IgnoreTags";
 
         public static bool RemoveKey(MensaBotEntities mensaBotEntities, string key, string channelId, string coversationId)
         {
@@ -39,6 +40,9 @@ namespace MensaBot.MessageInterpretation
         {
             try
             {
+                if (string.IsNullOrEmpty(value))
+                    return false;
+
                 var chat = mensaBotEntities.Chats.Single(t => t.ConversationId == conversationId && t.ChannelId == channelId);
 
                 if (chat.Settings.Any(s => s.Key == key))

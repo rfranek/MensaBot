@@ -68,19 +68,19 @@ namespace MensaBot.MessageInterpretation
             switch (key)
             {
                 case LanguageKey.DE:
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " Alkohol" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " BIO" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " Fisch" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " Hühnchen" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " Knoblauch" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " Lamm" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " Mensa Vital" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " Rindfleisch" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " Schwein" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " Suppe" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " Vegan" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " Vegetarisch" + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " Wild" + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + FoodElement.FoodTagsToGermanString(FoodTags.ALCOHOL) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + FoodElement.FoodTagsToGermanString(FoodTags.BIO) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + FoodElement.FoodTagsToGermanString(FoodTags.FISH) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.CHICKEN) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + FoodElement.FoodTagsToGermanString(FoodTags.GARLIC) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + FoodElement.FoodTagsToGermanString(FoodTags.HOGGET) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VITAL) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + FoodElement.FoodTagsToGermanString(FoodTags.BEEF) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + FoodElement.FoodTagsToGermanString(FoodTags.PORK) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + FoodElement.FoodTagsToGermanString(FoodTags.SOUP) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VEGAN) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VEGETARIAN) + MessageInterpreter.LineBreak;
+                    text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VENSION) + MessageInterpreter.LineBreak;
                     break;
                 case LanguageKey.none:
                 case LanguageKey.EN:
@@ -104,9 +104,9 @@ namespace MensaBot.MessageInterpretation
             return text;
         }
 
-        public string GetDefaultCanteen(MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string GetValue(MensaBotEntities mensaBotEntities, string key ,string channelId, string conversationId)
         {
-            return DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
+            return DatabaseUtilities.GetValueBytKey(mensaBotEntities, key, channelId, conversationId);
         }
 
         public string SetDefaultCanteen(LanguageKey key, CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
@@ -121,6 +121,32 @@ namespace MensaBot.MessageInterpretation
             {
                 return key == LanguageKey.DE ? "Standard-Mensa konnte nicht aktualisiert werden." : "Can't add default canteen.";
             }
+        }
+
+        public List<FoodTags> SetIgnoreTags(LanguageKey key, string tags, char divider)
+        {
+            if (string.IsNullOrEmpty(tags))
+                return null;
+
+            List<string> tagsList = tags.Split(divider).ToList();
+            for (int i = tagsList.Count - 1; i >= 0; i--)
+            {
+                FoodTags element = MessageInterpreter.Get.FindTag(tagsList[i], key);
+                if (element == FoodTags.NONE_FOOD_TAG)
+                {
+                    tagsList.RemoveAt(i);
+                }
+            }
+            if (tagsList.Count == 0)
+                return null;
+
+            List<FoodTags> cleanedTags = new List<FoodTags>();
+
+            for (int i = 0; i < tagsList.Count; i++)
+                cleanedTags.Add(MessageInterpreter.Get.FindTag(tagsList[i], key));
+            
+            return (cleanedTags == null || cleanedTags.Count == 0)? null: cleanedTags;
+
         }
 
 
@@ -193,7 +219,9 @@ namespace MensaBot.MessageInterpretation
                 dayElements = _canteens[(int)canteenName].DayElements.FindAll(t => t.Date.Day == now.Day).ToArray();
             }
             catch (Exception e)
-            {  }
+            {
+                dayElements = null;
+            }
 
             if (dayElements == null || dayElements.Length == 0)
             {
@@ -202,22 +230,45 @@ namespace MensaBot.MessageInterpretation
 
             string [] menuItems = new string[dayElements.Length];
 
+            IEnumerable<FoodTags> filter = null;
+            try
+            {
+                filter =
+                    CommandBucket.Get.GetValue(mensaBotEntities, DatabaseUtilities.IgnoreTags, channelId, conversationId)
+                        .Split(MessageInterpreter.ParamDivider)
+                        .Select(t => Enum.Parse(typeof(FoodTags), t.ToUpper()))
+                        .Cast<FoodTags>();
+            }
+            catch (Exception e)
+            {
+                filter = null;
+            }
+
+
             //List all elements for dayElement
             for (int i = 0; i < dayElements.Length; i++)
             {
                 menuItems[i] = (key == LanguageKey.DE ? "Speiseplan für" : "Menu for") + ":" + MessageInterpreter.LineBreak + MessageInterpreter.MarkBold((key == LanguageKey.DE ? _canteens[(int)canteenName].GermanDescriptions[i] : _canteens[(int)canteenName].EnglishDescriptions[i])) + " "
                                + (key == LanguageKey.DE ? "am  " : "at ") + MessageInterpreter.MarkItalic(dayElements[i].Date.ToString("dd.MM.yyyy"))
                                + MessageInterpreter.DrawLine;
-
+                
                 foreach (var foodElement in dayElements[i].FoodElements)
                 {
+                    bool hideElement = false;
                     var tagResult = "";
                     if (foodElement.Tags != null)
                     {
                         foreach (var tag in foodElement.Tags)
                         {
                             if (tag != null)
+                            {
+                                if (filter!=null && filter.Contains(tag))
+                                {
+                                    hideElement = true;
+                                    break;
+                                }
                                 tagResult += FoodElement.FoodTagsToEmoji(tag) + ",";
+                            }
                             else
                             {
                                 tagResult += "❎";
@@ -238,11 +289,14 @@ namespace MensaBot.MessageInterpretation
                     if (string.IsNullOrEmpty(foodElement.EnglishName.Trim()) && key == LanguageKey.EN)
                         warning = MessageInterpreter.MarkItalic("no english translation available");
 
-                    if (key == LanguageKey.DE || warning != null)
-                        menuItems[i] += MessageInterpreter.MarkBold(foodElement.GermanName) + warning + " " + MessageInterpreter.LineBreak + tagResult + MessageInterpreter.DrawLine;
-                    else
-                        menuItems[i] += MessageInterpreter.MarkBold(MessageInterpreter.FirstCharToUpper(foodElement.EnglishName)) + " " + MessageInterpreter.LineBreak + tagResult
-                                     + MessageInterpreter.DrawLine;
+                    if (!hideElement)
+                    {
+                        if (key == LanguageKey.DE || warning != null)
+                            menuItems[i] += MessageInterpreter.MarkBold(foodElement.GermanName) + warning + " " + MessageInterpreter.LineBreak + tagResult + MessageInterpreter.DrawLine;
+                        else
+                            menuItems[i] += MessageInterpreter.MarkBold(MessageInterpreter.FirstCharToUpper(foodElement.EnglishName)) + " " + MessageInterpreter.LineBreak + tagResult
+                                            + MessageInterpreter.DrawLine;
+                    }
                 }
             }
 

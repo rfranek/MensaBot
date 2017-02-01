@@ -3,6 +3,8 @@ using System.Linq;
 
 namespace MensaBot.MessageInterpretation
 {
+    using MensaBotParsing.Mensa;
+
     public class MessageInterpreter
     {
         #region constants
@@ -11,10 +13,12 @@ namespace MensaBot.MessageInterpretation
 
         public static string LineBreak = "\n\n";
 
+        public static readonly char ParamDivider = ',';
+
         private static MessageInterpreter _instance;
         private static readonly string MessageBold = "__";
         private static readonly string MessageItalic = "*";
-
+        
         #endregion
 
         #region member vars
@@ -30,6 +34,7 @@ namespace MensaBot.MessageInterpretation
 
         private readonly CommandAlternatives _dateNames;
         private readonly CommandAlternatives _mainCommands;
+        private readonly CommandAlternatives _possibleTagName;
 
         #endregion
 
@@ -50,6 +55,10 @@ namespace MensaBot.MessageInterpretation
             _dateNames = new CommandAlternatives();
             _dateNames.ReplaceCommands(LanguageKey.DE, new[] { "heute", "morgen", "übermorgen" });
             _dateNames.ReplaceCommands(LanguageKey.EN, new[] { "today", "tomorrow", "the_day_after_tomorrow" });
+
+            _possibleTagName = new CommandAlternatives();
+            _possibleTagName.ReplaceCommands(LanguageKey.DE, new[] { FoodElement.FoodTagsToGermanString(FoodTags.ALCOHOL), FoodElement.FoodTagsToGermanString(FoodTags.BEEF), FoodElement.FoodTagsToGermanString(FoodTags.BIO), FoodElement.FoodTagsToGermanString(FoodTags.CHICKEN), FoodElement.FoodTagsToGermanString(FoodTags.FISH), FoodElement.FoodTagsToGermanString(FoodTags.GARLIC), FoodElement.FoodTagsToGermanString(FoodTags.HOGGET), FoodElement.FoodTagsToGermanString(FoodTags.PORK), FoodElement.FoodTagsToGermanString(FoodTags.SOUP), FoodElement.FoodTagsToGermanString(FoodTags.VITAL), FoodElement.FoodTagsToGermanString(FoodTags.VEGAN), FoodElement.FoodTagsToGermanString(FoodTags.VEGETARIAN), FoodElement.FoodTagsToGermanString(FoodTags.VENSION) });
+            _possibleTagName.ReplaceCommands(LanguageKey.EN, new[] { FoodTags.ALCOHOL.ToString().ToLower(), FoodTags.BEEF.ToString().ToLower(), FoodTags.BIO.ToString().ToLower(), FoodTags.CHICKEN.ToString().ToLower(), FoodTags.FISH.ToString().ToLower(), FoodTags.GARLIC.ToString().ToLower(), FoodTags.HOGGET.ToString().ToLower(), FoodTags.PORK.ToString().ToLower(), FoodTags.SOUP.ToString().ToLower(), FoodTags.VITAL.ToString().ToLower(), FoodTags.VEGAN.ToString().ToLower(), FoodTags.VEGETARIAN.ToString().ToLower(), FoodTags.VENSION.ToString().ToLower() });
 
             _canteenNameLowerHall = new CommandAlternatives();
             _canteenNameLowerHall.ReplaceCommands(LanguageKey.DE, new[] { "u", "unten", "campus_unten", "mensa_unten", "erdgeschoss" });
@@ -104,6 +113,7 @@ namespace MensaBot.MessageInterpretation
                     if (_dateNames.Contains(messagePart, LanguageKey.EN))
                         return LanguageKey.EN;
                     break;
+
             }
             return LanguageKey.none;
         }
@@ -128,6 +138,44 @@ namespace MensaBot.MessageInterpretation
                 return CanteenName.UPPER_HALL_LOWER_HALL;
 
             return CanteenName.none;
+        }
+
+        public FoodTags FindTag(string messagePart, LanguageKey languageKey)
+        {
+            var index = _possibleTagName.IndexOf(messagePart, languageKey);
+            var r = _possibleTagName.IndexOf(FoodTags.ALCOHOL.ToString().ToLower(), languageKey);
+            if (index<0)
+                return FoodTags.NONE_FOOD_TAG;
+
+            if (index == _possibleTagName.IndexOf(FoodTags.ALCOHOL.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.ALCOHOL), languageKey))
+                return FoodTags.ALCOHOL;
+            if (index == _possibleTagName.IndexOf(FoodTags.BIO.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.BIO), languageKey))
+                return FoodTags.BIO;
+            if (index == _possibleTagName.IndexOf(FoodTags.GARLIC.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.GARLIC), languageKey))
+                return FoodTags.GARLIC;
+            if (index == _possibleTagName.IndexOf(FoodTags.HOGGET.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.HOGGET), languageKey))
+                return FoodTags.HOGGET;
+            if (index == _possibleTagName.IndexOf(FoodTags.PORK.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.PORK), languageKey))
+                return FoodTags.PORK;
+            if (index == _possibleTagName.IndexOf(FoodTags.SOUP.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.SOUP), languageKey))
+                return FoodTags.SOUP;
+            if (index == _possibleTagName.IndexOf(FoodTags.VEGAN.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.VEGAN), languageKey))
+                return FoodTags.VEGAN;
+            if (index == _possibleTagName.IndexOf(FoodTags.VEGETARIAN.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.VEGETARIAN), languageKey))
+                return FoodTags.VEGETARIAN;
+            if (index == _possibleTagName.IndexOf(FoodTags.VITAL.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.VITAL), languageKey))
+                return FoodTags.VITAL;
+            if (index == _possibleTagName.IndexOf(FoodTags.VENSION.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.VENSION), languageKey))
+                return FoodTags.VENSION;
+            if (index == _possibleTagName.IndexOf(FoodTags.BEEF.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.BEEF), languageKey))
+                return FoodTags.BEEF;
+            if (index == _possibleTagName.IndexOf(FoodTags.CHICKEN.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.CHICKEN), languageKey))
+                return FoodTags.CHICKEN;
+            if (index == _possibleTagName.IndexOf(FoodTags.FISH.ToString().ToLower(), languageKey) || index == _possibleTagName.IndexOf(FoodElement.FoodTagsToGermanString(FoodTags.FISH), languageKey))
+                return FoodTags.FISH;
+
+
+            return FoodTags.NONE_FOOD_TAG;
         }
 
         public string [] FindCanteenNames(CanteenName name, LanguageKey languageKey)

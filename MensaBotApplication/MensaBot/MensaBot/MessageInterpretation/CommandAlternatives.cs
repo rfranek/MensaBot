@@ -86,8 +86,10 @@ namespace MensaBot.MessageInterpretation
                 if (values == null)
                     return -1;
 
-                var index = values.ToList().IndexOf(value);
-                if (index == null)
+                values = values.Select(s => s.ToLower()).ToArray();
+
+                var index = Array.IndexOf(values, value.ToLower());
+                if (index == null || index ==-1)
                     return -1;
                 else
                     return index;

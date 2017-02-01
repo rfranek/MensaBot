@@ -13,6 +13,8 @@ namespace MensaBot
 
     using MensaBot.MessageInterpretation;
 
+    using MensaBotParsing.Mensa;
+
     using Microsoft.Bot.Connector;
 
     [BotAuthentication]
@@ -41,6 +43,7 @@ namespace MensaBot
                     var noContent = Request.CreateResponse(HttpStatusCode.NoContent);
                     return noContent;
                 }
+
                 if (activity.Text.StartsWith("/start"))
                     return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateStartMessage(LanguageKey.none));
 
@@ -77,12 +80,22 @@ namespace MensaBot
                     return await SendResponseMessage(connector, activity, (result == true ? "Removed all data from you!" : "Can't remove data from you." + MessageInterpreter.LineBreak + "I'm sorry 💔!"));
                 }
 
-                if (activity.Text.ToLower().StartsWith("/removedefault"))
+                if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/remove help"))
+                {
+                    var message = MessageInterpreter.MarkBold("Help for /remove") + MessageInterpreter.DrawLine
+                                + "Use: /remove canteen or /remove mensa to delte information about the default canteen." + MessageInterpreter.DrawLine
+                                + "Use: /remove filter to delete all filter settings." + MessageInterpreter.LineBreak;
+
+                    return await SendResponseMessage(connector, activity, message);
+
+                }
+
+                if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/remove mensa") || activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/remove canteen"))
                 {
                     string[] msgParts = activity.Text.ToLower().Replace(_botHandle, "").Split(' ');
 
                     if (msgParts.Length != 2)
-                        return await SendResponseMessage(connector, activity, "Did you mean: /removedefault canteen or /setdefault mensa");
+                        return await SendResponseMessage(connector, activity, "Did you mean: /remove canteen or /remove mensa");
 
                     LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
 
@@ -94,32 +107,87 @@ namespace MensaBot
                         return await SendResponseMessage(connector, activity, (languageKey == LanguageKey.DE ? "Standart-Mensa, sofern vorhanden, gelöscht." : "Removed default canteen, if exists."));
                     }
 
-
                 }
-                if (activity.Text.ToLower().StartsWith("/getdefault"))
-                    return await SendResponseMessage(connector, activity, CommandBucket.Get.GetDefaultCanteen(mbe, activity.ChannelId, activity.Conversation.Id));
 
-                if (activity.Text.ToLower().StartsWith("/setdefault"))
+                if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/remove filter"))
                 {
-                    string setDefaultCanteenMessage = activity.Text.Remove(0, 1).ToLower();
-                    string[] setDefaultCanteenMessageParts = setDefaultCanteenMessage.Split(' ');
+                    string[] msgParts = activity.Text.ToLower().Replace(_botHandle, "").Split(' ');
 
-                    if (setDefaultCanteenMessageParts.Length != 3)
-                        return await SendResponseMessage(connector, activity, "Did you mean: /setdefault canteen [canteenname] or /setdefault mensa [mensaname]");
+                    if (msgParts.Length != 2)
+                        return await SendResponseMessage(connector, activity, "Did you mean: /remove filter");
 
-                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setDefaultCanteenMessageParts[1]);
+                    DatabaseUtilities.RemoveKey(mbe, DatabaseUtilities.IgnoreTags, activity.ChannelId, activity.Conversation.Id);
+                    return await SendResponseMessage(connector, activity, ( "Alle Filter, sofern vorhanden, wurden gelöscht."+MessageInterpreter.LineBreak+"Removed filter, if exists."));
+                }
 
-                    if (languageKey == LanguageKey.none)
-                        return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
+                if (activity.Text.ToLower().Replace(_botHandle,"").StartsWith("/get mensa") || activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/get canteen"))
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.GetValue(mbe, DatabaseUtilities.DefaultMensaTag, activity.ChannelId, activity.Conversation.Id));
 
-                    CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setDefaultCanteenMessageParts[2], languageKey);
+                if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/get filter") || activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/get canteen"))
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.GetValue(mbe, DatabaseUtilities.IgnoreTags, activity.ChannelId, activity.Conversation.Id));
 
-                    if (canteenName == CanteenName.none)
-                        return await SendResponseMessage(connector, activity, ("Could not find canteen with name " + MessageInterpreter.MarkBold(setDefaultCanteenMessageParts[2])));
+                if (activity.Text.ToLower().StartsWith("/set"))
+                {
+                    if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/set help"))
+                    {
+                        var message = MessageInterpreter.MarkBold("Help for /set") + MessageInterpreter.DrawLine
+                                    + "Use: /set canteen [canteenname] for update the default mensa." + MessageInterpreter.DrawLine 
+                                    + "Use: /set filter [filterA],[filterB].... for update filter. E.g. /set filter vegan,pork..." ;
 
+                        return await SendResponseMessage(connector, activity, message);
+                    }
 
-                    return await SendResponseMessage(connector, activity, CommandBucket.Get.SetDefaultCanteen(languageKey, canteenName, mbe, activity.ChannelId, activity.Conversation.Id));
+                    string[] setMessageParts = activity.Text.Remove(0, 1).Replace(_botHandle,"").ToLower().Split(' ');
 
+                    if (setMessageParts.Length != 3)
+                        return await SendResponseMessage(connector, activity, "Did you mean: /set canteen [canteenname] or /set mensa [mensaname]");
+
+                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setMessageParts[1]);
+
+                    if (languageKey != LanguageKey.none)
+                    {
+                        CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setMessageParts[2], languageKey);
+
+                        if (canteenName == CanteenName.none)
+                            return await SendResponseMessage(connector, activity, ("Could not find canteen with name " + MessageInterpreter.MarkBold(setMessageParts[2])));
+
+                        return await SendResponseMessage(connector, activity, CommandBucket.Get.SetDefaultCanteen(languageKey, canteenName, mbe, activity.ChannelId, activity.Conversation.Id));
+                    }
+
+                    if ((setMessageParts[1].ToLower() == "filter"))
+                    {
+                        DatabaseUtilities.CreateChatEntry(mbe, activity.ChannelId, activity.Conversation.Id);
+
+                        var tags = CommandBucket.Get.SetIgnoreTags(LanguageKey.EN, setMessageParts[2], MessageInterpreter.ParamDivider);
+                        var tagsAdditional = CommandBucket.Get.SetIgnoreTags(LanguageKey.DE, setMessageParts[2], MessageInterpreter.ParamDivider);
+
+                        if (tags != null && tagsAdditional !=null) 
+                             tags.AddRange(tagsAdditional);
+                        if (tags == null && tagsAdditional != null)
+                            tags = tagsAdditional;
+
+                        if(tags == null)
+                            return await SendResponseMessage(connector, activity, "FAIL" + MessageInterpreter.LineBreak + "Could not add tags.");
+
+                        tags = tags.Distinct().ToList();
+
+                        string tagsAsStringEnglish = "";
+                        string tagsAsStringGerman = "";
+                        for (int i = 0; i < tags.Count-1; i++)
+                        {
+                            tagsAsStringEnglish += tags[i].ToString().ToLower() + MessageInterpreter.ParamDivider;
+                            tagsAsStringGerman += FoodElement.FoodTagsToGermanString(tags[i]) + MessageInterpreter.ParamDivider;
+                        }
+                        tagsAsStringEnglish += tags[tags.Count - 1].ToString().ToLower();
+                        tagsAsStringGerman += FoodElement.FoodTagsToGermanString(tags[tags.Count - 1]);
+
+                        if (DatabaseUtilities.AddEntry(DatabaseUtilities.IgnoreTags, tagsAsStringEnglish, mbe, activity.ChannelId, activity.Conversation.Id))
+                          return await SendResponseMessage(connector, activity,"Tags werden nun ignoriert: "+ MessageInterpreter.MarkBold(tagsAsStringGerman) + MessageInterpreter.LineBreak +"Added tags to ignore list: "+ MessageInterpreter.MarkBold(tagsAsStringEnglish));
+                        else
+                            return await SendResponseMessage(connector, activity, "Tags konnten nicht gesetzt werden." + MessageInterpreter.LineBreak + "Could not add tags.");
+                    }
+                    
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
                 }
 
                 if (activity.Text.StartsWith("/list canteen") || activity.Text.StartsWith("/list" + _botHandle + " canteen"))
