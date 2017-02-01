@@ -60,8 +60,8 @@ namespace MensaBot.MessageInterpretation
             _canteenNameUpperHall.ReplaceCommands(LanguageKey.EN, new[] { "u", "upper", "campus_upper", "canteen_upper", "upper_floor", "upper_hall" });
 
             _canteenNameLowerOrUpper = new CommandAlternatives();
-            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.DE, new[] { "c", "campus", "unten&oben", "oben&unten", "uni_campus" });
-            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.EN, new[] { "c", "campus", "lower&upper", "upper&lower", "uni_campus" });
+            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.DE, new[] { "c", "uni", "campus", "unten&oben", "oben&unten", "uni_campus" });
+            _canteenNameLowerOrUpper.ReplaceCommands(LanguageKey.EN, new[] { "c", "uni", "campus", "lower&upper", "upper&lower", "uni_campus" });
 
             _canteenNameKellerCafe = new CommandAlternatives();
             _canteenNameKellerCafe.ReplaceCommands(LanguageKey.DE, new[] { "k", "keller", "kellercafe", "kellercafé" });
@@ -110,21 +110,21 @@ namespace MensaBot.MessageInterpretation
 
         public CanteenName FindCanteen(string messagePart, LanguageKey languageKey)
         {
-            if (_canteenNameLowerHall.Contains(messagePart, languageKey))
+            if (_canteenNameLowerHall.Contains(messagePart, languageKey) || messagePart == CanteenName.LOWER_HALL.ToString())
                 return CanteenName.LOWER_HALL;
-            if (_canteenNameUpperHall.Contains(messagePart, languageKey))
+            if (_canteenNameUpperHall.Contains(messagePart, languageKey) || messagePart == CanteenName.UPPER_HALL.ToString())
                 return CanteenName.UPPER_HALL;
-            if (_canteenNameHalberstadt.Contains(messagePart, languageKey))
+            if (_canteenNameHalberstadt.Contains(messagePart, languageKey) || messagePart == CanteenName.HALBERSTADT.ToString())
                 return CanteenName.HALBERSTADT;
-            if (_canteenNameWernigerode.Contains(messagePart, languageKey))
+            if (_canteenNameWernigerode.Contains(messagePart, languageKey) || messagePart == CanteenName.WERNIGERODE.ToString())
                 return CanteenName.WERNIGERODE;
-            if (_canteenNameHerrenkrug.Contains(messagePart, languageKey))
+            if (_canteenNameHerrenkrug.Contains(messagePart, languageKey) || messagePart == CanteenName.HERRENKRUG.ToString())
                 return CanteenName.HERRENKRUG;
-            if (_canteenNameKellerCafe.Contains(messagePart, languageKey))
+            if (_canteenNameKellerCafe.Contains(messagePart, languageKey) || messagePart == CanteenName.KELLERCAFE.ToString())
                 return CanteenName.KELLERCAFE;
-            if (_canteenNameStendal.Contains(messagePart, languageKey))
+            if (_canteenNameStendal.Contains(messagePart, languageKey) || messagePart == CanteenName.STENDAL.ToString())
                 return CanteenName.STENDAL;
-            if (_canteenNameLowerOrUpper.Contains(messagePart, languageKey))
+            if (_canteenNameLowerOrUpper.Contains(messagePart, languageKey) || messagePart == CanteenName.UPPER_HALL_LOWER_HALL.ToString())
                 return CanteenName.UPPER_HALL_LOWER_HALL;
 
             return CanteenName.none;

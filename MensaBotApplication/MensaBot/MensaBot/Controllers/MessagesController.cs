@@ -3,10 +3,13 @@ using System.Linq;
 
 namespace MensaBot
 {
+    using System.Collections.Generic;
     using System.Net;
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
+
+    using Chronic;
 
     using MensaBot.MessageInterpretation;
 
@@ -26,10 +29,11 @@ namespace MensaBot
 
         public async Task<HttpResponseMessage> Post([FromBody] Activity activity)
         {
+            MensaBotEntities mbe = new MensaBotEntities();
+
 
             if (activity.Type == ActivityTypes.Message)
             {
-
                 ConnectorClient connector = new ConnectorClient(new Uri(activity.ServiceUrl));
 
                 if (string.IsNullOrEmpty(activity.Text) || !activity.Text.StartsWith("/"))
@@ -38,16 +42,10 @@ namespace MensaBot
                     return noContent;
                 }
                 if (activity.Text.StartsWith("/start"))
-                {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateStartMessage(LanguageKey.none)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateStartMessage(LanguageKey.none));
 
                 if (activity.Text.StartsWith("/help"))
-                {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateHelpMessage(LanguageKey.none)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateHelpMessage(LanguageKey.none));
 
                 if (activity.Text.StartsWith("/ping"))
                 {
@@ -68,44 +66,95 @@ namespace MensaBot
                 }
 
                 if (activity.Text.StartsWith("/legende"))
-                {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateKeyMessage(LanguageKey.DE)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateKeyMessage(LanguageKey.DE));
 
                 if (activity.Text.StartsWith("/key"))
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateKeyMessage(LanguageKey.EN));
+
+                if (activity.Text.ToLower().StartsWith("/deletedata"))
                 {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateKeyMessage(LanguageKey.EN)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                    bool result = DatabaseUtilities.RemoveAllSettingsAndChat(mbe, activity.ChannelId, activity.Conversation.Id);
+                    return await SendResponseMessage(connector, activity, (result == true ? "Removed all data from you!" : "Can't remove data from you." + MessageInterpreter.LineBreak + "I'm sorry 💔!"));
+                }
+
+                if (activity.Text.ToLower().StartsWith("/removedefault"))
+                {
+                    string[] msgParts = activity.Text.ToLower().Replace(_botHandle, "").Split(' ');
+
+                    if (msgParts.Length != 2)
+                        return await SendResponseMessage(connector, activity, "Did you mean: /removedefault canteen or /setdefault mensa");
+
+                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
+
+                    if (languageKey == LanguageKey.none)
+                        return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
+                    else
+                    {
+                        DatabaseUtilities.RemoveKey(mbe, DatabaseUtilities.DefaultMensaTag, activity.ChannelId, activity.Conversation.Id);
+                        return await SendResponseMessage(connector, activity, (languageKey == LanguageKey.DE ? "Standart-Mensa, sofern vorhanden, gelöscht." : "Removed default canteen, if exists."));
+                    }
+
+
+                }
+                if (activity.Text.ToLower().StartsWith("/getdefault"))
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.GetDefaultCanteen(mbe, activity.ChannelId, activity.Conversation.Id));
+
+                if (activity.Text.ToLower().StartsWith("/setdefault"))
+                {
+                    string setDefaultCanteenMessage = activity.Text.Remove(0, 1).ToLower();
+                    string[] setDefaultCanteenMessageParts = setDefaultCanteenMessage.Split(' ');
+
+                    if (setDefaultCanteenMessageParts.Length != 3)
+                        return await SendResponseMessage(connector, activity, "Did you mean: /setdefault canteen [canteenname] or /setdefault mensa [mensaname]");
+
+                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setDefaultCanteenMessageParts[1]);
+
+                    if (languageKey == LanguageKey.none)
+                        return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
+
+                    CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setDefaultCanteenMessageParts[2], languageKey);
+
+                    if (canteenName == CanteenName.none)
+                        return await SendResponseMessage(connector, activity, ("Could not find canteen with name " + MessageInterpreter.MarkBold(setDefaultCanteenMessageParts[2])));
+
+
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.SetDefaultCanteen(languageKey, canteenName, mbe, activity.ChannelId, activity.Conversation.Id));
+
                 }
 
                 if (activity.Text.StartsWith("/list canteen") || activity.Text.StartsWith("/list" + _botHandle + " canteen"))
-                {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateListCanteensMessage(LanguageKey.EN)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage(LanguageKey.EN));
 
                 if (activity.Text.StartsWith("/list mensen") || activity.Text.StartsWith("/list" + _botHandle + " mensen"))
-                {
-                    await connector.Conversations.ReplyToActivityAsync(activity.CreateReply(CommandBucket.Get.CreateListCanteensMessage(LanguageKey.DE)));
-                    return Request.CreateResponse(HttpStatusCode.OK);
-                }
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage(LanguageKey.DE));
+
+                //------------------------------------------------------------------------------------------------
+                //Find mensa commands
+                //------------------------------------------------------------------------------------------------
 
                 //remove initial /
                 string messageText = activity.Text.Remove(0, 1).ToLower();
                 string[] messageParts = messageText.Split(' ');
 
-                messageParts[0] = messageParts[0].Replace(_botHandle, "");
+                string[] expectedMessageParts = new string[3];
+                expectedMessageParts[0] = null;  //command name
+                expectedMessageParts[1] = null;  //mensa name
+                expectedMessageParts[2] = null;  //date
 
-                LanguageKey key = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, messageParts[0]);
-                if (key == LanguageKey.none)
+                for (int i = 0; i < messageParts.Length; i++)
                 {
-                    Activity reply = activity.CreateReply(MessageInterpreter.MarkBold("Unknown command!") + " - Please do usefull things, otherwise you still will be hungry." + MessageInterpreter.LineBreak + "Use " + MessageInterpreter.MarkBold("\"/help\"") + " for help.");
-                    await connector.Conversations.ReplyToActivityAsync(reply);
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                    expectedMessageParts[i] = messageParts[i];
                 }
 
-                string[] results = CommandBucket.Get.CreateMensaReply(key, messageParts);
+                expectedMessageParts[0] = expectedMessageParts[0]?.Replace(_botHandle, "");
+
+                LanguageKey key = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, expectedMessageParts[0]);
+
+                if (key == LanguageKey.none)
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
+
+
+                string[] results = CommandBucket.Get.CreateMensaReply(key, expectedMessageParts[1], expectedMessageParts[2], mbe, activity.ChannelId,activity.Conversation.Id);
 
                 foreach (var result in results)
                 {
@@ -121,10 +170,16 @@ namespace MensaBot
             return response;
         }
 
+        public async Task<HttpResponseMessage> SendResponseMessage(ConnectorClient client, Activity activity, string message)
+        {
+            await client.Conversations.ReplyToActivityAsync(activity.CreateReply(message));
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
         private Activity HandleSystemMessage(Activity message)
         {
+
             if (message.Type == ActivityTypes.DeleteUserData)
-            { }
+            {}
             else if (message.Type == ActivityTypes.ConversationUpdate)
             { }
             else if (message.Type == ActivityTypes.ContactRelationUpdate)

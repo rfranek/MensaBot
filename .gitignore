@@ -261,3 +261,4 @@ paket-files/
 /MensaBotApplication/MensaBot/MensaBot/Global.asax.cs
 /MensaBotApplication/MensaBot/MensaBot/Global.asax
 /MensaBotApplication/MensaBot/MensaBot/Metadata/deploymentTemplates/apiappconfig.azureresource.json
+/MensaBotApplication/MensaBot/MensaBotDatabase/LocalToAzure.scmp

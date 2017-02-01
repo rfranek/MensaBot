@@ -4,8 +4,11 @@ using System.Linq;
 namespace MensaBot.MessageInterpretation
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     using MensaBotParsing.Mensa;
+
+    using Microsoft.Bot.Connector;
 
     public class CommandBucket
     {
@@ -40,7 +43,7 @@ namespace MensaBot.MessageInterpretation
         public string CreateHelpMessage(LanguageKey key)
         {
             string text = MessageInterpreter.MarkBold("Use this syntax") + ":" + MessageInterpreter.LineBreak + "/" + MessageInterpreter.MarkBold("[canteencommand] [canteenname] [date] ")
-                          + MessageInterpreter.MarkItalic("optional");
+                        + MessageInterpreter.MarkItalic("optional");
             text += MessageInterpreter.DrawLine;
             text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("german") + ": /mensa, /kantine, /futtern, /schnabulieren ..." + MessageInterpreter.LineBreak;
             text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("english") + ": /canteen, /menu, /nosh, /eat ...";
@@ -101,18 +104,60 @@ namespace MensaBot.MessageInterpretation
             return text;
         }
 
-        public string [] CreateMensaReply(LanguageKey key, string[] messageParts)
+        public string GetDefaultCanteen(MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
-            if (messageParts.Length < 2)
+            return DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
+        }
+
+        public string SetDefaultCanteen(LanguageKey key, CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        {
+            DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+
+            if (DatabaseUtilities.AddEntry(DatabaseUtilities.DefaultMensaTag, defaultCanteen.ToString(), mensaBotEntities, channelId, conversationId))
             {
-                return new string[] { "Please add " + MessageInterpreter.MarkBold("mensa name") + "!"};
+                return key == LanguageKey.DE? "Standard-Mensa hinzugefügt." : "Added default canteen.";
+            }
+            else
+            {
+                return key == LanguageKey.DE ? "Standard-Mensa konnte nicht aktualisiert werden." : "Can't add default canteen.";
+            }
+        }
+
+
+        public string CreateUnknownCommand()
+        {
+            return MessageInterpreter.MarkBold("Unknown command!") + " - Please do usefull things, otherwise you still will be hungry." + MessageInterpreter.LineBreak 
+                   + "Use "+ MessageInterpreter.MarkBold("\"/help\"") + " for help.";
+        }
+
+        public string [] CreateMensaReply(LanguageKey key, string paramFirst, string paramSecond, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        {
+            
+            //check if paramFirst is date, if true -> change order
+            if (!string.IsNullOrEmpty(paramFirst) && string.IsNullOrEmpty(paramSecond))
+            {
+                var isDate = (MessageInterpreter.Get.FindDate(paramFirst, key) != DateIndex.none);
+                if (isDate)
+                {
+                    paramSecond = paramFirst;
+                    paramFirst = null;
+                }
             }
 
-            CanteenName canteenName = MessageInterpreter.Get.FindCanteen(messageParts[1], key);
+            if (string.IsNullOrEmpty(paramFirst))
+            {
+                paramFirst = DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
+
+                if(string.IsNullOrEmpty(paramFirst))
+                    return new string[] { "Please add " + MessageInterpreter.MarkBold("mensa name") + "!"};
+
+            }
+
+            CanteenName canteenName = MessageInterpreter.Get.FindCanteen(paramFirst, key);
 
             if (canteenName == CanteenName.none)
             {
-                return new string[] { "Could not find canteen with name " + MessageInterpreter.MarkBold(messageParts[1])};
+                return new string[] { "Could not find canteen with name " + MessageInterpreter.MarkBold(paramFirst) };
             }
 
             try
@@ -124,19 +169,20 @@ namespace MensaBot.MessageInterpretation
             }
             catch (Exception e)
             {
-                return new string[] { "Fail to load information about " + MessageInterpreter.MarkBold(messageParts[1])};
+                return new string[] { "Fail to load information about " + MessageInterpreter.MarkBold(paramFirst) };
             }
 
             DateIndex dateIndex = DateIndex.TODAY;
 
-            if (messageParts.Length > 2)
+            if (!string.IsNullOrEmpty(paramSecond))
             {
-                dateIndex = MessageInterpreter.Get.FindDate(messageParts[2], key);
+                dateIndex = MessageInterpreter.Get.FindDate(paramSecond, key);
                 if (dateIndex == DateIndex.none)
                 {
-                    return new string[] { "Could not find date with name " + MessageInterpreter.MarkBold(messageParts[2]) };
+                    return new string[] { "Could not find date with name " + MessageInterpreter.MarkBold(paramSecond) };
                 }
             }
+
 
             //Find correct date element.
             DateTime now = DateTime.Now.ToUniversalTime().AddDays((int)dateIndex).AddHours(1);
