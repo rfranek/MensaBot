@@ -6,6 +6,7 @@ namespace MensaBotParsing.Mensa
     using System.Collections.Generic;
 
     using MensaBot.MessageInterpretation;
+    using MensaBot.Resources;
 
     class FoodElement
     {
@@ -74,39 +75,39 @@ namespace MensaBotParsing.Mensa
             }
         }
 
-        public static string FoodTagsToGermanString(FoodTags tag)
+        public static string FoodTagsToString(FoodTags tag)
         {
             switch (tag)
             {
                 case FoodTags.PORK:
-                    return "Schwein";
+                    return Lang.food_tag_pork;
                 case FoodTags.CHICKEN:
-                    return "Hühnchen";
+                    return Lang.food_tag_chicken;
                 case FoodTags.FISH:
-                    return "Fisch";
+                    return Lang.food_tag_fish;
                 case FoodTags.ALCOHOL:
-                    return "Alkohol";
+                    return Lang.food_tag_alcohol;
                 case FoodTags.HOGGET:
-                    return "Lamm";
+                    return Lang.food_tag_hogget;
                 case FoodTags.BEEF:
-                    return "Rindfleisch";
+                    return Lang.food_tag_beef;
                 case FoodTags.VEGETARIAN:
-                    return "Vegetarisch";
+                    return Lang.food_tag_vegetarian;
                 case FoodTags.VEGAN:
-                    return "Vegan";
+                    return Lang.food_tag_vegan;
                 case FoodTags.BIO:
-                    return "BIO";
+                    return Lang.food_tag_bio;
                 case FoodTags.VITAL:
-                    return "Vital";
+                    return Lang.food_tag_vital;
                 case FoodTags.SOUP:
-                    return "Suppe";
+                    return Lang.food_tag_soup;
                 case FoodTags.GARLIC:
-                    return "Knoblauch";
+                    return Lang.food_tag_garlic;
                 case FoodTags.VENSION:
-                    return "Wild";
+                    return Lang.food_tag_vension;
 
                 default:
-                    return tag.ToString();
+                    return null;
             }
         }
 

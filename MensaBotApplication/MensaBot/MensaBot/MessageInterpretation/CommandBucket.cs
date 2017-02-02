@@ -6,6 +6,8 @@ namespace MensaBot.MessageInterpretation
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
+    using MensaBot.Resources;
+
     using MensaBotParsing.Mensa;
 
     using Microsoft.Bot.Connector;
@@ -40,68 +42,64 @@ namespace MensaBot.MessageInterpretation
 
         #region methods
 
-        public string CreateHelpMessage(LanguageKey key)
+        public string CreateHelpMessage()
         {
-            string text = MessageInterpreter.MarkBold("Use this syntax") + ":" + MessageInterpreter.LineBreak + "/" + MessageInterpreter.MarkBold("[canteencommand] [canteenname] [date] ")
-                        + MessageInterpreter.MarkItalic("optional");
+            string text = MessageInterpreter.MarkBold(Lang.use_syntax) + ":" + MessageInterpreter.LineBreak + "/" + MessageInterpreter.MarkBold(Lang.canteen_explained)
+                        + MessageInterpreter.MarkItalic(Lang.optional);
             text += MessageInterpreter.DrawLine;
-            text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("german") + ": /mensa, /kantine, /futtern, /schnabulieren ..." + MessageInterpreter.LineBreak;
-            text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("english") + ": /canteen, /menu, /nosh, /eat ...";
+            //text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("german") + ": /mensa, /kantine, /futtern, /schnabulieren ..." + MessageInterpreter.LineBreak;
+            text += MessageInterpreter.MarkBold(Lang.canteen_command_tag) + " = " + Lang.canteen_command_examples;
             text += MessageInterpreter.DrawLine;
-            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("german") + ": /list mensen - Zeigt alle verfügbaren Mensen und ihre Befehlsbezeichnungen." + MessageInterpreter.LineBreak;
-            text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("english") + ": /list canteens - Shows all canteens and their shortcuts.";
+            //text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("german") + ": /list mensen - Zeigt alle verfügbaren Mensen und ihre Befehlsbezeichnungen." + MessageInterpreter.LineBreak;
+            text += MessageInterpreter.MarkBold(Lang.canteen_name_tag) + "= " + Lang.list_canteen_description;
             text += MessageInterpreter.DrawLine;
-            text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("german") + ": z.B.: heute, morgen, übermorgen" + MessageInterpreter.LineBreak;
-            text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("english") + ": e.g: today, tomorrow, the_day_after_tomorrow";
+            //text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("german") + ": z.B.: heute, morgen, übermorgen" + MessageInterpreter.LineBreak;
+            text += MessageInterpreter.MarkBold(Lang.canteen_date_tag) + "= "  + Lang.date_examples;
             text += MessageInterpreter.DrawLine;
-            text += "Use /" + MessageInterpreter.MarkBold("key") + " or /" + MessageInterpreter.MarkBold("legende") + " to get a description for emojis";
+            text += Lang.command_help_intro + MessageInterpreter.MarkBold(Lang.key) + " " + Lang.help_emoji_description;
             text += MessageInterpreter.DrawLine;
-            text += MessageInterpreter.MarkBold("Please note") + ": This is " + MessageInterpreter.MarkBold("not") + " an official bot from Studentenwerk Magdeburg." + MessageInterpreter.LineBreak;
-            text += "This bot uses public informations from their website.";
+            text += MessageInterpreter.MarkBold(Lang.please_note) + ": " + Lang.reference_1 + MessageInterpreter.LineBreak;
+            text += Lang.reference_2;
 
             return text;
         }
 
-        public string CreateKeyMessage(LanguageKey key)
+        public string CreateKeyMessage()
         {
             string text = "";
-            switch (key)
-            {
-                case LanguageKey.DE:
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + FoodElement.FoodTagsToGermanString(FoodTags.ALCOHOL) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + FoodElement.FoodTagsToGermanString(FoodTags.BIO) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + FoodElement.FoodTagsToGermanString(FoodTags.FISH) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.CHICKEN) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + FoodElement.FoodTagsToGermanString(FoodTags.GARLIC) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + FoodElement.FoodTagsToGermanString(FoodTags.HOGGET) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VITAL) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + FoodElement.FoodTagsToGermanString(FoodTags.BEEF) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + FoodElement.FoodTagsToGermanString(FoodTags.PORK) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + FoodElement.FoodTagsToGermanString(FoodTags.SOUP) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VEGAN) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VEGETARIAN) + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + FoodElement.FoodTagsToGermanString(FoodTags.VENSION) + MessageInterpreter.LineBreak;
-                    break;
-                case LanguageKey.none:
-                case LanguageKey.EN:
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + FoodTags.ALCOHOL.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + FoodTags.BEEF.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + FoodTags.BIO.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + FoodTags.CHICKEN.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + FoodTags.FISH.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + FoodTags.GARLIC.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + FoodTags.HOGGET.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + FoodTags.PORK.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + FoodTags.SOUP.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " Mensa " + FoodTags.VITAL.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + FoodTags.VEGAN.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + FoodTags.VEGETARIAN.ToString().ToLower() + MessageInterpreter.LineBreak;
-                    text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + FoodTags.VENSION.ToString().ToLower() + MessageInterpreter.LineBreak;
 
-                    break;
-            }
+            text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + Lang.food_tag_alcohol.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + Lang.food_tag_beef.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + Lang.food_tag_bio.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + Lang.food_tag_chicken.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + Lang.food_tag_fish.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + Lang.food_tag_garlic.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + Lang.food_tag_hogget.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + Lang.food_tag_pork.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + Lang.food_tag_soup.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " " + Lang.canteen + " " + Lang.food_tag_vital.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + Lang.food_tag_vegan.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + Lang.food_tag_vegetarian.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + Lang.food_tag_vension.ToLower() + MessageInterpreter.LineBreak;
 
             return text;
+        }
+
+        public string SetLanguage(MensaBotEntities mensaBotEntities, string language, string channelId, string conversationId)
+        {
+            int index = Array.IndexOf(MessageInterpreter.AvailableLanguages, language);
+
+            if (index >= 0)
+            {
+
+                if (DatabaseUtilities.AddEntry(DatabaseUtilities.LanguageTag, language, mensaBotEntities, channelId, conversationId))
+                    return  Lang.add_language + ": "+language;
+                else
+                    return Lang.add_language_failed+ " :" + language;
+
+            }
+            return Lang.unknown_language;
+
         }
 
         public string GetValue(MensaBotEntities mensaBotEntities, string key ,string channelId, string conversationId)
@@ -109,18 +107,14 @@ namespace MensaBot.MessageInterpretation
             return DatabaseUtilities.GetValueBytKey(mensaBotEntities, key, channelId, conversationId);
         }
 
-        public string SetDefaultCanteen(LanguageKey key, CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string SetDefaultCanteen(CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
             DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
 
             if (DatabaseUtilities.AddEntry(DatabaseUtilities.DefaultMensaTag, defaultCanteen.ToString(), mensaBotEntities, channelId, conversationId))
-            {
-                return key == LanguageKey.DE? "Standard-Mensa hinzugefügt." : "Added default canteen.";
-            }
+                return Lang.add_canteen;
             else
-            {
-                return key == LanguageKey.DE ? "Standard-Mensa konnte nicht aktualisiert werden." : "Can't add default canteen.";
-            }
+                return Lang.add_canteen_failed;
         }
 
         public List<FoodTags> SetIgnoreTags(LanguageKey key, string tags, char divider)
@@ -152,8 +146,8 @@ namespace MensaBot.MessageInterpretation
 
         public string CreateUnknownCommand()
         {
-            return MessageInterpreter.MarkBold("Unknown command!") + " - Please do usefull things, otherwise you still will be hungry." + MessageInterpreter.LineBreak 
-                   + "Use "+ MessageInterpreter.MarkBold("\"/help\"") + " for help.";
+            return MessageInterpreter.MarkBold(Lang.unknown_command) + " "+ Lang.unknown_command_joke_msg + MessageInterpreter.LineBreak 
+                   + Lang.command_help_intro + " " + MessageInterpreter.MarkBold("\""+Lang.command_help+"\"") + " " + Lang.command_help_exit;
         }
 
         public string [] CreateMensaReply(LanguageKey key, string paramFirst, string paramSecond, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
@@ -175,7 +169,7 @@ namespace MensaBot.MessageInterpretation
                 paramFirst = DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
 
                 if (string.IsNullOrEmpty(paramFirst))
-                    return new string[] { "Please add " + MessageInterpreter.MarkBold("mensa name") + "!" };
+                    return new string[] { Lang.please_add+" " + MessageInterpreter.MarkBold(Lang.canteen_name) + "!" };
                 else
                     isShortRequest = true;
 
@@ -185,7 +179,7 @@ namespace MensaBot.MessageInterpretation
 
             if (canteenName == CanteenName.none)
             {
-                return new string[] { "Could not find canteen with name " + MessageInterpreter.MarkBold(paramFirst) };
+                return new string[] { Lang.canteen_not_found+": " + MessageInterpreter.MarkBold(paramFirst) };
             }
 
             try
@@ -197,7 +191,7 @@ namespace MensaBot.MessageInterpretation
             }
             catch (Exception e)
             {
-                return new string[] { "Fail to load information about " + MessageInterpreter.MarkBold(paramFirst) };
+                return new string[] { Lang.fail_to_load_information + ": " + MessageInterpreter.MarkBold(paramFirst) };
             }
 
             DateIndex dateIndex = DateIndex.TODAY;
@@ -207,7 +201,7 @@ namespace MensaBot.MessageInterpretation
                 dateIndex = MessageInterpreter.Get.FindDate(paramSecond, key);
                 if (dateIndex == DateIndex.none)
                 {
-                    return new string[] { "Could not find date with name " + MessageInterpreter.MarkBold(paramSecond) };
+                    return new string[] { Lang.date_not_found + " " + MessageInterpreter.MarkBold(paramSecond) };
                 }
             }
 
@@ -306,7 +300,7 @@ namespace MensaBot.MessageInterpretation
                     string warning = null;
 
                     if (string.IsNullOrEmpty(foodElement.EnglishName.Trim()) && key == LanguageKey.EN)
-                        warning = MessageInterpreter.MarkItalic("no english translation available");
+                        warning = MessageInterpreter.MarkItalic(Lang.no_english_available);
 
                     if (!hideElement)
                     {
@@ -322,9 +316,9 @@ namespace MensaBot.MessageInterpretation
             return menuItems;
         }
 
-        public string CreateStartMessage(LanguageKey key)
+        public string CreateStartMessage()
         {
-            string text = MessageInterpreter.MarkBold("Welcome!") + " Hungry? 😋" + MessageInterpreter.LineBreak + "I can help you to solve this problem.";
+            string text = MessageInterpreter.MarkBold(Lang.start_welcome) + " " + Lang.start_intro + MessageInterpreter.LineBreak + Lang.start_exit;
 
             return text;
         }
@@ -333,7 +327,7 @@ namespace MensaBot.MessageInterpretation
         {
             if(_canteens == null) CreateCanteenInfo();
 
-            string text = MessageInterpreter.MarkBold((key == LanguageKey.DE) ? "Auflistung aller Mensen und ihrer Befehlsbezeichnung:": "List of all canteens and their shortcuts:");
+            string text = MessageInterpreter.MarkBold(Lang.list_of_canteens);
             text += MessageInterpreter.DrawLine;
 
             for (int i = 0; i < _canteens.Count; i++)
