@@ -196,13 +196,13 @@
     <value>Alkohol</value>
   </data>
   <data name="food_tag_beef" xml:space="preserve">
-    <value>Rindfleisch</value>
+    <value>Rind</value>
   </data>
   <data name="food_tag_bio" xml:space="preserve">
     <value>BIO</value>
   </data>
   <data name="food_tag_chicken" xml:space="preserve">
-    <value>chicken</value>
+    <value>Huhn</value>
   </data>
   <data name="food_tag_fish" xml:space="preserve">
     <value>Fisch</value>
@@ -238,7 +238,7 @@
     <value>legende</value>
   </data>
   <data name="language_help" xml:space="preserve">
-    <value>Nutze /langugae name. Zum Beispiel: /language en or /language de.</value>
+    <value>Nutze /language name. Zum Beispiel: /language en or /language de.</value>
   </data>
   <data name="list_canteen_description" xml:space="preserve">
     <value>/list canteens - Zeigt alle Mensen und deren Shortkeys.</value>

@@ -182,6 +182,11 @@ namespace MensaBot
 
                         return await SendResponseMessage(connector, activity, CommandBucket.Get.SetDefaultCanteen(canteenName, mbe, activity.ChannelId, activity.Conversation.Id));
                     }
+                    if ((setMessageParts[1].ToLower() == "style"))
+                    {
+
+
+                    }
 
                     if ((setMessageParts[1].ToLower() == "filter"))
                     {

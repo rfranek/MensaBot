@@ -59,10 +59,10 @@ namespace MensaBot.MessageInterpretation
 
             for (int c = 0; c < commands.Length; c++)
             {
-                commands[c] = manager.GetString(_commands[c]);
+                commands[c] = manager.GetString(_commands[c]).ToLower();
             }
 
-            return Array.IndexOf(commands, value);
+            return Array.IndexOf(commands, value.ToLower());
 
         }
 
