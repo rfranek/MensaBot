@@ -135,81 +135,11 @@
   <data name="add_tags_failed" xml:space="preserve">
     <value>Could not add tags.</value>
   </data>
+  <data name="broken_heart" xml:space="preserve">
+    <value>. 💔</value>
+  </data>
   <data name="canteen" xml:space="preserve">
     <value>canteen</value>
-  </data>
-  <data name="canteen_not_found" xml:space="preserve">
-    <value>Could not find canteen with name</value>
-  </data>
-  <data name="command_help" xml:space="preserve">
-    <value>/help</value>
-  </data>
-  <data name="command_help_exit" xml:space="preserve">
-    <value>for help.</value>
-  </data>
-  <data name="command_help_intro" xml:space="preserve">
-    <value>Use</value>
-  </data>
-  <data name="deleted_canteen" xml:space="preserve">
-    <value>Removed default canteen, if exists.</value>
-  </data>
-  <data name="deleted_filter" xml:space="preserve">
-    <value>Removed filter, if exists.</value>
-  </data>
-  <data name="failed_sorry" xml:space="preserve">
-    <value>I'm sorry 💔!</value>
-  </data>
-  <data name="not_play_ping_pong" xml:space="preserve">
-    <value>I do not play ping pong.</value>
-  </data>
-  <data name="ping" xml:space="preserve">
-    <value>Ping! 🏓</value>
-  </data>
-  <data name="pong" xml:space="preserve">
-    <value>Pong! 🏓</value>
-  </data>
-  <data name="removed_all_data" xml:space="preserve">
-    <value>Removed all data from you!</value>
-  </data>
-  <data name="removed_all_data_failed" xml:space="preserve">
-    <value>Can't remove data from you.</value>
-  </data>
-  <data name="remove_help" xml:space="preserve">
-    <value>Help for /remove</value>
-    <comment>headline</comment>
-  </data>
-  <data name="remove_help_canteen" xml:space="preserve">
-    <value>Use: /remove canteen to delte information about the default canteen.</value>
-  </data>
-  <data name="remove_help_filter" xml:space="preserve">
-    <value>Use: /remove filter to delete all filter settings.</value>
-  </data>
-  <data name="set_fail" xml:space="preserve">
-    <value>This did not work. Use: /set help</value>
-  </data>
-  <data name="set_help" xml:space="preserve">
-    <value>Help for /set</value>
-  </data>
-  <data name="set_help_canteen" xml:space="preserve">
-    <value>Use: /set canteen [canteenname] to update the default mensa.</value>
-  </data>
-  <data name="set_help_filter" xml:space="preserve">
-    <value>Use: /set filter [filterA],[filterB].... to ignore meals with given tags, e.g. /set filter vegan,pork...</value>
-  </data>
-  <data name="unknown_command" xml:space="preserve">
-    <value>Unknown command!</value>
-  </data>
-  <data name="unknown_command_joke_msg" xml:space="preserve">
-    <value>- Please do usefull things, otherwise you still will be hungry.</value>
-  </data>
-  <data name="unknown_language" xml:space="preserve">
-    <value>Unknown language.</value>
-  </data>
-  <data name="wrong_param_remove_canteen" xml:space="preserve">
-    <value>Did you mean: /remove canteen or /remove mensa</value>
-  </data>
-  <data name="wrong_param_remove_filter" xml:space="preserve">
-    <value>Did you mean /remove filter?</value>
   </data>
   <data name="canteen_command_examples" xml:space="preserve">
     <value>/canteen, /menu, /nosh, /eat ...</value>
@@ -229,11 +159,35 @@
   <data name="canteen_name_tag" xml:space="preserve">
     <value>[canteenname]</value>
   </data>
+  <data name="canteen_not_found" xml:space="preserve">
+    <value>Could not find canteen with name</value>
+  </data>
+  <data name="command_help" xml:space="preserve">
+    <value>/help</value>
+  </data>
+  <data name="command_help_exit" xml:space="preserve">
+    <value>for help.</value>
+  </data>
+  <data name="command_help_intro" xml:space="preserve">
+    <value>Use</value>
+  </data>
+  <data name="could_not_find_date" xml:space="preserve">
+    <value>Could not find information for</value>
+  </data>
   <data name="date_examples" xml:space="preserve">
     <value>today, tomorrow, the_day_after_tomorrow</value>
   </data>
   <data name="date_not_found" xml:space="preserve">
     <value>Could not find date with name</value>
+  </data>
+  <data name="deleted_canteen" xml:space="preserve">
+    <value>Removed default canteen, if exists.</value>
+  </data>
+  <data name="deleted_filter" xml:space="preserve">
+    <value>Removed filter, if exists.</value>
+  </data>
+  <data name="failed_sorry" xml:space="preserve">
+    <value>I'm sorry 💔!</value>
   </data>
   <data name="fail_to_load_information" xml:space="preserve">
     <value>Fail to load information about</value>
@@ -277,50 +231,32 @@
   <data name="food_tag_vital" xml:space="preserve">
     <value>vital</value>
   </data>
+  <data name="help_default_settings" xml:space="preserve">
+    <value>to show help for define default settings.</value>
+  </data>
+  <data name="help_default_settings_remove" xml:space="preserve">
+    <value>to show help for removing default settings.</value>
+  </data>
+  <data name="help_delete_all_data" xml:space="preserve">
+    <value>to delete all your settings.</value>
+  </data>
   <data name="help_emoji_description" xml:space="preserve">
     <value>to get a description for emojis</value>
   </data>
+  <data name="help_set_language" xml:space="preserve">
+    <value>to define your language. E.g. /language de or /language en</value>
+  </data>
   <data name="key" xml:space="preserve">
     <value>key</value>
+  </data>
+  <data name="language_help" xml:space="preserve">
+    <value>Please use /langugae name. E.g. /language en or /language de.</value>
   </data>
   <data name="list_canteen_description" xml:space="preserve">
     <value>/list canteens - Shows all canteens and their shortcuts.</value>
   </data>
   <data name="list_of_canteens" xml:space="preserve">
     <value>List of all canteens and their shortcuts:</value>
-  </data>
-  <data name="no_english_available" xml:space="preserve">
-    <value>no english translation available</value>
-  </data>
-  <data name="optional" xml:space="preserve">
-    <value>optional</value>
-  </data>
-  <data name="please_add" xml:space="preserve">
-    <value>Please add</value>
-  </data>
-  <data name="please_note" xml:space="preserve">
-    <value>Please note</value>
-  </data>
-  <data name="reference_1" xml:space="preserve">
-    <value>This is not an official bot from Studentenwerk Magdeburg.</value>
-  </data>
-  <data name="reference_2" xml:space="preserve">
-    <value>This bot uses public informations from their website.</value>
-  </data>
-  <data name="start_exit" xml:space="preserve">
-    <value>I can help you to solve this problem.</value>
-  </data>
-  <data name="start_intro" xml:space="preserve">
-    <value>Hungry? 😋</value>
-  </data>
-  <data name="start_welcome" xml:space="preserve">
-    <value>Welcome!</value>
-  </data>
-  <data name="use_syntax" xml:space="preserve">
-    <value>Use this syntax</value>
-  </data>
-  <data name="language_help" xml:space="preserve">
-    <value>Please use /langugae name. E.g. /language en or /language de.</value>
   </data>
   <data name="menu_for" xml:space="preserve">
     <value>Menu for</value>
@@ -349,10 +285,85 @@
   <data name="name_canteen_wernigerode" xml:space="preserve">
     <value>Wernigerode</value>
   </data>
-  <data name="broken_heart" xml:space="preserve">
-    <value>. 💔</value>
+  <data name="not_play_ping_pong" xml:space="preserve">
+    <value>I do not play ping pong.</value>
   </data>
-  <data name="could_not_find_date" xml:space="preserve">
-    <value>Could not find information for</value>
+  <data name="no_english_available" xml:space="preserve">
+    <value>no english translation available</value>
+  </data>
+  <data name="optional" xml:space="preserve">
+    <value>optional</value>
+  </data>
+  <data name="ping" xml:space="preserve">
+    <value>Ping! 🏓</value>
+  </data>
+  <data name="please_add" xml:space="preserve">
+    <value>Please add</value>
+  </data>
+  <data name="please_note" xml:space="preserve">
+    <value>Please note</value>
+  </data>
+  <data name="pong" xml:space="preserve">
+    <value>Pong! 🏓</value>
+  </data>
+  <data name="reference_1" xml:space="preserve">
+    <value>This is not an official bot from Studentenwerk Magdeburg.</value>
+  </data>
+  <data name="reference_2" xml:space="preserve">
+    <value>This bot uses public informations from their website.</value>
+  </data>
+  <data name="removed_all_data" xml:space="preserve">
+    <value>Removed all data from you!</value>
+  </data>
+  <data name="removed_all_data_failed" xml:space="preserve">
+    <value>Can't remove data from you.</value>
+  </data>
+  <data name="remove_help" xml:space="preserve">
+    <value>Help for /remove</value>
+  </data>
+  <data name="remove_help_canteen" xml:space="preserve">
+    <value>Use: /remove canteen to delte information about the default canteen.</value>
+  </data>
+  <data name="remove_help_filter" xml:space="preserve">
+    <value>Use: /remove filter to delete all filter settings.</value>
+  </data>
+  <data name="set_fail" xml:space="preserve">
+    <value>This did not work. Use: /set help</value>
+  </data>
+  <data name="set_help" xml:space="preserve">
+    <value>Help for /set</value>
+  </data>
+  <data name="set_help_canteen" xml:space="preserve">
+    <value>Use: /set canteen [canteenname] to update the default mensa.</value>
+  </data>
+  <data name="set_help_filter" xml:space="preserve">
+    <value>Use: /set filter [filterA],[filterB].... to ignore meals with given tags, e.g. /set filter vegan,pork...</value>
+  </data>
+  <data name="start_exit" xml:space="preserve">
+    <value>I can help you to solve this problem.</value>
+  </data>
+  <data name="start_intro" xml:space="preserve">
+    <value>Hungry? 😋</value>
+  </data>
+  <data name="start_welcome" xml:space="preserve">
+    <value>Welcome!</value>
+  </data>
+  <data name="unknown_command" xml:space="preserve">
+    <value>Unknown command!</value>
+  </data>
+  <data name="unknown_command_joke_msg" xml:space="preserve">
+    <value>- Please do usefull things, otherwise you still will be hungry.</value>
+  </data>
+  <data name="unknown_language" xml:space="preserve">
+    <value>Unknown language.</value>
+  </data>
+  <data name="use_syntax" xml:space="preserve">
+    <value>Use this syntax</value>
+  </data>
+  <data name="wrong_param_remove_canteen" xml:space="preserve">
+    <value>Did you mean: /remove canteen or /remove mensa</value>
+  </data>
+  <data name="wrong_param_remove_filter" xml:space="preserve">
+    <value>Did you mean /remove filter?</value>
   </data>
 </root>

@@ -353,4 +353,13 @@
   <data name="wrong_param_remove_filter" xml:space="preserve">
     <value>Meinstest du: /remove filter?</value>
   </data>
+  <data name="help_default_settings" xml:space="preserve">
+    <value>um Hilfe für Standardeinstellungen zu bekommen.</value>
+  </data>
+  <data name="help_default_settings_remove" xml:space="preserve">
+    <value>um Hilfe für das Löschen von Standardeinstellungen zu bekommen.</value>
+  </data>
+  <data name="help_delete_all_data" xml:space="preserve">
+    <value>um alle deine Standardeinstellungen zu löschen.</value>
+  </data>
 </root>

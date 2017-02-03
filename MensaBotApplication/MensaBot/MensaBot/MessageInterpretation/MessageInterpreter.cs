@@ -68,7 +68,7 @@ namespace MensaBot.MessageInterpretation
             _possibleTagName.ReplaceCommands(new[] { "food_tag_alcohol", "food_tag_beef", "food_tag_bio", "food_tag_chicken", "food_tag_fish", "food_tag_garlic", "food_tag_hogget", "food_tag_pork", "food_tag_soup", "food_tag_vital", "food_tag_vegan", "food_tag_vegetarian", "food_tag_vension" });
 
             _canteenNameLowerHall = new CommandAlternatives();
-            _canteenNameLowerHall.ReplaceCommands(new[] { "canteen_Name_LowerUpper_0", "canteen_Name_LowerUpper_1","canteen_Name_LowerUpper_2", "canteen_Name_LowerUpper_3", "canteen_Name_LowerUpper_4", "canteen_Name_LowerUpper_5" });
+            _canteenNameLowerHall.ReplaceCommands(new[] { "canteen_Name_Lower_Hall_0", "canteen_Name_Lower_Hall_1", "canteen_Name_Lower_Hall_2", "canteen_Name_Lower_Hall_3", "canteen_Name_Lower_Hall_4", "canteen_Name_Lower_Hall_5" });
 
             _canteenNameUpperHall = new CommandAlternatives();
             _canteenNameUpperHall.ReplaceCommands(new[] { "canteen_Name_Upper_Hall_0", "canteen_Name_Upper_Hall_1", "canteen_Name_Upper_Hall_2", "canteen_Name_Upper_Hall_3", "canteen_Name_Upper_Hall_4", "canteen_Name_Upper_Hall_5" });
@@ -101,11 +101,11 @@ namespace MensaBot.MessageInterpretation
             switch (type)
             {
                 case MessageInterType.MAIN_COMMAND:
-                    if (_mainCommands.ContainsCommand(CanteenCommand.ResourceManager.GetString(messagePart)))
+                    if (_mainCommands.ContainsCommand(messagePart, CanteenCommand.ResourceManager))
                         return true;
                     break;
                 case MessageInterType.DATE:
-                    if (_dateNames.ContainsCommand(Dates.ResourceManager.GetString(messagePart)))
+                    if (_dateNames.ContainsCommand(Dates.ResourceManager.GetString(messagePart), Dates.ResourceManager))
                         return true;
                     break;
 
@@ -115,21 +115,21 @@ namespace MensaBot.MessageInterpretation
 
         public CanteenName FindCanteen(string messagePart)
         {
-            if (_canteenNameLowerHall.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.LOWER_HALL.ToString())
+            if (_canteenNameLowerHall.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.LOWER_HALL.ToString())
                 return CanteenName.LOWER_HALL;
-            if (_canteenNameUpperHall.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.UPPER_HALL.ToString())
+            if (_canteenNameUpperHall.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.UPPER_HALL.ToString())
                 return CanteenName.UPPER_HALL;
-            if (_canteenNameHalberstadt.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.HALBERSTADT.ToString())
+            if (_canteenNameHalberstadt.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.HALBERSTADT.ToString())
                 return CanteenName.HALBERSTADT;
-            if (_canteenNameWernigerode.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.WERNIGERODE.ToString())
+            if (_canteenNameWernigerode.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.WERNIGERODE.ToString())
                 return CanteenName.WERNIGERODE;
-            if (_canteenNameHerrenkrug.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.HERRENKRUG.ToString())
+            if (_canteenNameHerrenkrug.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.HERRENKRUG.ToString())
                 return CanteenName.HERRENKRUG;
-            if (_canteenNameKellerCafe.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.KELLERCAFE.ToString())
+            if (_canteenNameKellerCafe.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.KELLERCAFE.ToString())
                 return CanteenName.KELLERCAFE;
-            if (_canteenNameStendal.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.STENDAL.ToString())
+            if (_canteenNameStendal.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.STENDAL.ToString())
                 return CanteenName.STENDAL;
-            if (_canteenNameLowerOrUpper.ContainsCommand(CanteenNames.ResourceManager.GetString(messagePart)) || messagePart == CanteenName.UPPER_HALL_LOWER_HALL.ToString())
+            if (_canteenNameLowerOrUpper.ContainsCommand(messagePart, CanteenNames.ResourceManager) || messagePart == CanteenName.UPPER_HALL_LOWER_HALL.ToString())
                 return CanteenName.UPPER_HALL_LOWER_HALL;
 
             return CanteenName.none;
@@ -137,35 +137,35 @@ namespace MensaBot.MessageInterpretation
 
         public FoodTags FindTag(string messagePart)
         {
-            var index = _possibleTagName.IndexOf(messagePart);
+            var index = _possibleTagName.IndexOf(messagePart, Lang.ResourceManager);
             if (index<0)
                 return FoodTags.NONE_FOOD_TAG;
 
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.ALCOHOL)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.ALCOHOL), Lang.ResourceManager))
                 return FoodTags.ALCOHOL;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.BIO)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.BIO), Lang.ResourceManager))
                 return FoodTags.BIO;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.GARLIC)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.GARLIC), Lang.ResourceManager))
                 return FoodTags.GARLIC;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.HOGGET)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.HOGGET), Lang.ResourceManager))
                 return FoodTags.HOGGET;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.PORK)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.PORK), Lang.ResourceManager))
                 return FoodTags.PORK;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.SOUP)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.SOUP), Lang.ResourceManager))
                 return FoodTags.SOUP;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VEGAN)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VEGAN), Lang.ResourceManager))
                 return FoodTags.VEGAN;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VEGETARIAN)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VEGETARIAN), Lang.ResourceManager))
                 return FoodTags.VEGETARIAN;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VITAL)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VITAL), Lang.ResourceManager))
                 return FoodTags.VITAL;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VENSION)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.VENSION), Lang.ResourceManager))
                 return FoodTags.VENSION;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.BEEF)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.BEEF), Lang.ResourceManager))
                 return FoodTags.BEEF;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.CHICKEN)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.CHICKEN), Lang.ResourceManager))
                 return FoodTags.CHICKEN;
-            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.FISH)))
+            if (index == _possibleTagName.IndexOf(FoodElement.FoodTagsToString(FoodTags.FISH), Lang.ResourceManager))
                 return FoodTags.FISH;
 
 
@@ -198,7 +198,7 @@ namespace MensaBot.MessageInterpretation
 
         public DateIndex FindDate(string messagePart)
         {
-            var index = _dateNames.IndexOf(messagePart);
+            var index = _dateNames.IndexOf(messagePart, Dates.ResourceManager);
 
             switch (index)
             {

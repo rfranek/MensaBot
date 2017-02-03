@@ -4,6 +4,7 @@ using System.Linq;
 namespace MensaBot.MessageInterpretation
 {
     using System.Collections.Generic;
+    using System.Resources;
 
     using MensaBot.Resources.Language;
 
@@ -24,13 +25,13 @@ namespace MensaBot.MessageInterpretation
             _commands = new List<string>();
         }
 
-        public bool ContainsCommand(string possibleCommand)
+        public bool ContainsCommand(string possibleCommand, ResourceManager manager)
         {
             string [] commands = new string[_commands.Count];
 
             for (int c = 0; c < commands.Length; c++)
             {
-                commands[c] = Lang.ResourceManager.GetString(_commands[c]);
+                commands[c] = manager.GetString(_commands[c]);
             }
 
             return Array.IndexOf(commands, possibleCommand) >= 0;
@@ -52,13 +53,13 @@ namespace MensaBot.MessageInterpretation
             return _commands.ToArray();
         }
 
-        public int IndexOf (string value)
+        public int IndexOf (string value, ResourceManager manager)
         {
             string[] commands = new string[_commands.Count];
 
             for (int c = 0; c < commands.Length; c++)
             {
-                commands[c] = Lang.ResourceManager.GetString(_commands[c]);
+                commands[c] = manager.GetString(_commands[c]);
             }
 
             return Array.IndexOf(commands, value);

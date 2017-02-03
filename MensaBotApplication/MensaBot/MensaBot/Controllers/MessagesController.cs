@@ -128,7 +128,7 @@ namespace MensaBot
 
                     bool containsCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
 
-                    if (containsCommand)
+                    if (containsCommand)//TODO ! ?
                         return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
                     else
                     {

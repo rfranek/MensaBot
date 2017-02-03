@@ -115,7 +115,7 @@ namespace MensaBot.Resources.CanteenCommand {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to no_command_9001.
+        ///   Looks up a localized string similar to mensa.
         /// </summary>
         internal static string canteen_6 {
             get {

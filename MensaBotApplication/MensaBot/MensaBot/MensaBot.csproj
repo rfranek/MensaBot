@@ -185,15 +185,15 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Resources\Language\Lang.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Lang.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\Language\Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.de.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Language\Lang1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
     <Compile Include="Setting.cs">
       <DependentUpon>DataDBModel.tt</DependentUpon>
@@ -239,7 +239,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Language\Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+      <LastGenOutput>Lang1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\Language\Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>

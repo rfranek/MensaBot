@@ -48,16 +48,20 @@ namespace MensaBot.MessageInterpretation
             string text = MessageInterpreter.MarkBold(Lang.use_syntax) + ":" + MessageInterpreter.LineBreak + "/" + MessageInterpreter.MarkBold(Lang.canteen_explained)
                         + MessageInterpreter.MarkItalic(Lang.optional);
             text += MessageInterpreter.DrawLine;
-            //text += MessageInterpreter.MarkBold("[canteencommand]") + "=" + MessageInterpreter.MarkBold("german") + ": /mensa, /kantine, /futtern, /schnabulieren ..." + MessageInterpreter.LineBreak;
             text += MessageInterpreter.MarkBold(Lang.canteen_command_tag) + " = " + Lang.canteen_command_examples;
             text += MessageInterpreter.DrawLine;
-            //text += MessageInterpreter.MarkBold("[canteenname]") + "=" + MessageInterpreter.MarkBold("german") + ": /list mensen - Zeigt alle verfügbaren Mensen und ihre Befehlsbezeichnungen." + MessageInterpreter.LineBreak;
-            text += MessageInterpreter.MarkBold(Lang.canteen_name_tag) + "= " + Lang.list_canteen_description;
+            text += MessageInterpreter.MarkBold(Lang.canteen_name_tag) + " = " + Lang.list_canteen_description;
             text += MessageInterpreter.DrawLine;
-            //text += MessageInterpreter.MarkBold("[date]") + "=" + MessageInterpreter.MarkBold("german") + ": z.B.: heute, morgen, übermorgen" + MessageInterpreter.LineBreak;
             text += MessageInterpreter.MarkBold(Lang.canteen_date_tag) + "= "  + Lang.date_examples;
             text += MessageInterpreter.DrawLine;
-            text += Lang.command_help_intro  +" /"+ MessageInterpreter.MarkBold(Lang.key) + " " + Lang.help_emoji_description;
+            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("set help") + " " + Lang.help_default_settings + MessageInterpreter.LineBreak;
+            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("remove help") + " " + Lang.help_default_settings_remove;
+            text += MessageInterpreter.DrawLine;
+            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("deleteData") + " " + Lang.help_delete_all_data;
+            text += MessageInterpreter.DrawLine;
+            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("language") + " " + Lang.help_set_language;
+            text += MessageInterpreter.DrawLine;
+            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold(Lang.key) + " " + Lang.help_emoji_description;
             text += MessageInterpreter.DrawLine;
             text += MessageInterpreter.MarkBold(Lang.please_note) + ": " + Lang.reference_1 + MessageInterpreter.LineBreak;
             text += Lang.reference_2;
@@ -170,7 +174,7 @@ namespace MensaBot.MessageInterpretation
                 paramFirst = DatabaseUtilities.GetValueBytKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
 
                 if (string.IsNullOrEmpty(paramFirst))
-                    return new string[] { Lang.please_add+" " + MessageInterpreter.MarkBold(Lang.canteen_name) + "!" };
+                    return new string[] { Lang.please_add + " " + MessageInterpreter.MarkBold(Lang.canteen_name) + "!" };
                 else
                     isShortRequest = true;
 
@@ -262,7 +266,7 @@ namespace MensaBot.MessageInterpretation
             for (int i = 0; i < dayElements.Length; i++)
             {
                 menuItems[i] = Lang.menu_for + ":" + MessageInterpreter.LineBreak + MessageInterpreter.MarkBold(_canteens[(int)canteenName].GetDescription(i)) + " "
-                               + Lang.menu_for_at + MessageInterpreter.MarkItalic(dayElements[i].Date.ToString("dd.MM.yyyy"))
+                               + Lang.menu_for_at + " " + MessageInterpreter.MarkItalic(dayElements[i].Date.ToString("dd.MM.yyyy"))
                                + MessageInterpreter.DrawLine;
                 
                 foreach (var foodElement in dayElements[i].FoodElements)
