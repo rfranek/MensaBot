@@ -130,7 +130,7 @@ namespace MensaBot.MessageInterpretation
                             new Setting
                             {
                                 Key = DatabaseUtilities.LanguageTag,
-                                Value = LanguageKey.EN.ToString()
+                                Value = "en"
                             }
                         }
                     });
@@ -141,16 +141,6 @@ namespace MensaBot.MessageInterpretation
             return false;
         }
 
-        /*
-         * new Setting
-                                                {
-                                                    Key = "Language",
-                                                    Value = LanguageKey.EN.ToString()
-                                                }
-         * 
-         * 
-         * 
-         */
     }
 }
  

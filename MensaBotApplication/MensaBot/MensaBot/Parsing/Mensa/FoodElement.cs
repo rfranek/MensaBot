@@ -7,6 +7,7 @@ namespace MensaBotParsing.Mensa
 
     using MensaBot.MessageInterpretation;
     using MensaBot.Resources;
+    using MensaBot.Resources.Language;
 
     class FoodElement
     {

@@ -117,53 +117,34 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="food_tag_alcohol" xml:space="preserve">
-    <value>Alkohol</value>
+  <data name="canteen_0" xml:space="preserve">
+    <value>canteen</value>
   </data>
-  <data name="food_tag_beef" xml:space="preserve">
-    <value>Rindfleisch</value>
+  <data name="canteen_1" xml:space="preserve">
+    <value>nosh</value>
   </data>
-  <data name="food_tag_bio" xml:space="preserve">
-    <value>BIO</value>
+  <data name="canteen_2" xml:space="preserve">
+    <value>eat</value>
   </data>
-  <data name="food_tag_chicken" xml:space="preserve">
-    <value>chicken</value>
+  <data name="canteen_3" xml:space="preserve">
+    <value>menu</value>
   </data>
-  <data name="food_tag_fish" xml:space="preserve">
-    <value>Fisch</value>
+  <data name="canteen_4" xml:space="preserve">
+    <value>food</value>
   </data>
-  <data name="food_tag_garlic" xml:space="preserve">
-    <value>Knoblauch</value>
+  <data name="canteen_5" xml:space="preserve">
+    <value>hungry</value>
   </data>
-  <data name="food_tag_hogget" xml:space="preserve">
-    <value>Lamm</value>
+  <data name="canteen_6" xml:space="preserve">
+    <value>no_command_9001</value>
   </data>
-  <data name="food_tag_pork" xml:space="preserve">
-    <value>Schwein</value>
+  <data name="canteen_7" xml:space="preserve">
+    <value>no_command_9001</value>
   </data>
-  <data name="food_tag_soup" xml:space="preserve">
-    <value>Suppe</value>
+  <data name="canteen_8" xml:space="preserve">
+    <value>no_command_9001</value>
   </data>
-  <data name="food_tag_vegan" xml:space="preserve">
-    <value>Vegan</value>
-  </data>
-  <data name="food_tag_vegetarian" xml:space="preserve">
-    <value>Vegetarisch</value>
-  </data>
-  <data name="food_tag_vension" xml:space="preserve">
-    <value>Wild</value>
-  </data>
-  <data name="food_tag_vital" xml:space="preserve">
-    <value>Vital</value>
-  </data>
-  <data name="remove_help" xml:space="preserve">
-    <value>Hilfe für /remove</value>
-    <comment>headline</comment>
-  </data>
-  <data name="remove_help_canteen" xml:space="preserve">
-    <value>Lösche Standard Mensa mit /remove mensa.</value>
-  </data>
-  <data name="remove_help_filter" xml:space="preserve">
-    <value>Lösche alle Filter mit /remove filter</value>
+  <data name="canteen_9" xml:space="preserve">
+    <value>no_command_9001</value>
   </data>
 </root>

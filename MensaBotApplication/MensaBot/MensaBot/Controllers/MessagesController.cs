@@ -7,14 +7,12 @@ namespace MensaBot
     using System.Globalization;
     using System.Net;
     using System.Net.Http;
-    using System.Resources;
+
     using System.Threading.Tasks;
     using System.Web.Http;
 
-    using Chronic;
-
     using MensaBot.MessageInterpretation;
-    using MensaBot.Resources;
+    using MensaBot.Resources.Language;
 
     using MensaBotParsing.Mensa;
 
@@ -66,7 +64,7 @@ namespace MensaBot
                     DatabaseUtilities.CreateChatEntry(mbe, activity.ChannelId, activity.Conversation.Id);
                     var lang = activity.Text.Replace(_botHandle, "").ToLower().Split(' ');
                     if(lang.Length != 2)
-                        return await SendResponseMessage(connector, activity, "Pleas use /langugae name. E.g. /language en");
+                        return await SendResponseMessage(connector, activity, Lang.language_help);
 
                     return await SendResponseMessage(connector, activity, CommandBucket.Get.SetLanguage(mbe, lang[1],activity.ChannelId,activity.Conversation.Id));
                 }
@@ -128,9 +126,9 @@ namespace MensaBot
                     if (msgParts.Length != 2)
                         return await SendResponseMessage(connector, activity, Lang.wrong_param_remove_canteen);
 
-                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
+                    bool containsCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
 
-                    if (languageKey == LanguageKey.none)
+                    if (containsCommand)
                         return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
                     else
                     {
@@ -173,11 +171,11 @@ namespace MensaBot
                     if (setMessageParts.Length != 3)
                         return await SendResponseMessage(connector, activity, Lang.set_fail);
 
-                    LanguageKey languageKey = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setMessageParts[1]);
+                    bool containsCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setMessageParts[1]);
 
-                    if (languageKey != LanguageKey.none)
+                    if (containsCommand)
                     {
-                        CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setMessageParts[2], languageKey);
+                        CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setMessageParts[2]);
 
                         if (canteenName == CanteenName.none)
                             return await SendResponseMessage(connector, activity, (Lang.canteen_not_found +" " + MessageInterpreter.MarkBold(setMessageParts[2])));
@@ -188,9 +186,9 @@ namespace MensaBot
                     if ((setMessageParts[1].ToLower() == "filter"))
                     {
                         DatabaseUtilities.CreateChatEntry(mbe, activity.ChannelId, activity.Conversation.Id);
-
-                        var tags = CommandBucket.Get.SetIgnoreTags(LanguageKey.EN, setMessageParts[2], MessageInterpreter.ParamDivider);
-                        var tagsAdditional = CommandBucket.Get.SetIgnoreTags(LanguageKey.DE, setMessageParts[2], MessageInterpreter.ParamDivider);
+                        
+                        var tags = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
+                        var tagsAdditional = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
 
                         if (tags != null && tagsAdditional !=null) 
                              tags.AddRange(tagsAdditional);
@@ -222,10 +220,10 @@ namespace MensaBot
                 }
 
                 if (activity.Text.StartsWith("/list canteen") || activity.Text.StartsWith("/list" + _botHandle + " canteen"))
-                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage(LanguageKey.EN));
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage());
 
                 if (activity.Text.StartsWith("/list mensen") || activity.Text.StartsWith("/list" + _botHandle + " mensen"))
-                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage(LanguageKey.DE));
+                    return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateListCanteensMessage());
 
 
                 //------------------------------------------------------------------------------------------------
@@ -248,13 +246,13 @@ namespace MensaBot
 
                 expectedMessageParts[0] = expectedMessageParts[0]?.Replace(_botHandle, "");
 
-                LanguageKey key = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, expectedMessageParts[0]);
+                bool hasCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, expectedMessageParts[0]);
 
-                if (key == LanguageKey.none)
+                if (!hasCommand)
                     return await SendResponseMessage(connector, activity, CommandBucket.Get.CreateUnknownCommand());
 
 
-                string[] results = CommandBucket.Get.CreateMensaReply(key, expectedMessageParts[1], expectedMessageParts[2], mbe, activity.ChannelId,activity.Conversation.Id);
+                string[] results = CommandBucket.Get.CreateMensaReply(expectedMessageParts[1], expectedMessageParts[2], mbe, activity.ChannelId,activity.Conversation.Id);
 
                 foreach (var result in results)
                 {

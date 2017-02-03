@@ -5,11 +5,14 @@ namespace MensaBot.MessageInterpretation
 {
     using System.Collections.Generic;
 
+    using MensaBot.Resources.Language;
+
     public class CommandAlternatives
     {
         #region member vars
 
         private readonly Dictionary<string, string[]> _dictionary;
+        private List<string> _commands;
 
         #endregion
 
@@ -18,103 +21,58 @@ namespace MensaBot.MessageInterpretation
         public CommandAlternatives()
         {
             _dictionary = new Dictionary<string, string[]>();
+            _commands = new List<string>();
+        }
+
+        public bool ContainsCommand(string possibleCommand)
+        {
+            string [] commands = new string[_commands.Count];
+
+            for (int c = 0; c < commands.Length; c++)
+            {
+                commands[c] = Lang.ResourceManager.GetString(_commands[c]);
+            }
+
+            return Array.IndexOf(commands, possibleCommand) >= 0;
+
         }
 
         #endregion
 
         #region methods
 
-        public void AddCommands(LanguageKey key, string[] alternatives)
+        public void AddCommands(string[] alternatives)
         {
-            string keys = key.ToString();
-            string[] oldCommands;
-            _dictionary.TryGetValue(keys, out oldCommands);
-
-            if (oldCommands == null)
-                oldCommands = new string[0];
-
-            string[] newCommands = new string[oldCommands.Length + alternatives.Length];
-
-            for (int i = 0; i < oldCommands.Length; i++)
-            {
-                newCommands[i] = oldCommands[i];
-            }
-            for (int i = 0; i < alternatives.Length; i++)
-            {
-                newCommands[oldCommands.Length + i] = alternatives[i];
-            }
-
-            _dictionary.Remove(keys);
-            _dictionary.Add(keys, newCommands);
+            _commands.AddRange(alternatives);
         }
 
-        public bool Contains(string value, LanguageKey key)
+
+        public string[] listCommands()
         {
-            string[] values;
-
-            try
-            {
-                _dictionary.TryGetValue(key.ToString(), out values);
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e);
-                return false;
-            }
-
-            return values != null && values.Contains(value);
+            return _commands.ToArray();
         }
 
-        public string[] listCommands(LanguageKey key)
+        public int IndexOf (string value)
         {
-            string[] commands = null;
-            try
+            string[] commands = new string[_commands.Count];
+
+            for (int c = 0; c < commands.Length; c++)
             {
-                _dictionary.TryGetValue(key.ToString(), out commands);
-            }catch(Exception e) { }
-
-            return commands;
-        }
-
-        public int IndexOf (string value, LanguageKey key)
-        {
-            string[] values;
-
-            try
-            {
-                _dictionary.TryGetValue(key.ToString(), out values);
-                if (values == null)
-                    return -1;
-
-                values = values.Select(s => s.ToLower()).ToArray();
-
-                var index = Array.IndexOf(values, value.ToLower());
-                if (index == null || index ==-1)
-                    return -1;
-                else
-                    return index;
+                commands[c] = Lang.ResourceManager.GetString(_commands[c]);
             }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e);
-                return -1;
-            }
+
+            return Array.IndexOf(commands, value);
 
         }
 
-        public void ReplaceCommands(LanguageKey key, string[] alternatives)
+        public void ReplaceCommands(string[] alternatives)
         {
-            _dictionary.Add(key.ToString(), alternatives);
+            _commands = new List<string>();
+            _commands.AddRange(alternatives);
         }
 
         #endregion
     }
 
-    public enum LanguageKey
-    {
-        DE,
-        EN,
 
-        none
-    }
 }

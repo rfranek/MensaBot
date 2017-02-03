@@ -170,12 +170,27 @@
     <Compile Include="Parsing\Mensa\DayElement.cs" />
     <Compile Include="Parsing\Mensa\FoodElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Lang.Designer.cs">
+    <Compile Include="Resources\CanteenCommand\CanteenCommand.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CanteenCommand.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\CanteenNames\CanteenNames.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>CanteenNames.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Resources\Dates\Dates1.Designer.cs">
+      <DependentUpon>Dates.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Resources\Language\Lang.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.resx</DependentUpon>
     </Compile>
-    <Compile Include="Resources\Lang.de.Designer.cs">
+    <Compile Include="Resources\Language\Lang.de.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Lang.de.resx</DependentUpon>
@@ -207,15 +222,31 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\Lang.resx">
+    <EmbeddedResource Include="Resources\CanteenCommand\CanteenCommand.de.resx" />
+    <EmbeddedResource Include="Resources\CanteenCommand\CanteenCommand.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CanteenCommand.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\CanteenNames\CanteenNames.de.resx" />
+    <EmbeddedResource Include="Resources\CanteenNames\CanteenNames.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>CanteenNames.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Dates\Dates.de.resx" />
+    <EmbeddedResource Include="Resources\Dates\Dates.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Dates1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Language\Lang.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\Lang.de.resx">
+    <EmbeddedResource Include="Resources\Language\Lang.de.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Lang.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

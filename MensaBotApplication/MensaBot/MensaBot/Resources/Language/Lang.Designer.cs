@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MensaBot.Resources {
+namespace MensaBot.Resources.Language {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MensaBot.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MensaBot.Resources.Lang", typeof(Lang).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MensaBot.Resources.Language.Lang", typeof(Lang).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -79,7 +79,7 @@ namespace MensaBot.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Added language&quot;.
+        ///   Looks up a localized string similar to Added language.
         /// </summary>
         internal static string add_language {
             get {
@@ -111,6 +111,15 @@ namespace MensaBot.Resources {
         internal static string add_tags_failed {
             get {
                 return ResourceManager.GetString("add_tags_failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to . 💔.
+        /// </summary>
+        internal static string broken_heart {
+            get {
+                return ResourceManager.GetString("broken_heart", resourceCulture);
             }
         }
         
@@ -210,6 +219,15 @@ namespace MensaBot.Resources {
         internal static string command_help_intro {
             get {
                 return ResourceManager.GetString("command_help_intro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find information for.
+        /// </summary>
+        internal static string could_not_find_date {
+            get {
+                return ResourceManager.GetString("could_not_find_date", resourceCulture);
             }
         }
         
@@ -403,6 +421,15 @@ namespace MensaBot.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please use /langugae name. E.g. /language en or /language de..
+        /// </summary>
+        internal static string language_help {
+            get {
+                return ResourceManager.GetString("language_help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to /list canteens - Shows all canteens and their shortcuts..
         /// </summary>
         internal static string list_canteen_description {
@@ -417,6 +444,87 @@ namespace MensaBot.Resources {
         internal static string list_of_canteens {
             get {
                 return ResourceManager.GetString("list_of_canteens", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Menu for.
+        /// </summary>
+        internal static string menu_for {
+            get {
+                return ResourceManager.GetString("menu_for", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to at.
+        /// </summary>
+        internal static string menu_for_at {
+            get {
+                return ResourceManager.GetString("menu_for_at", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Halberstadt.
+        /// </summary>
+        internal static string name_canteen_halberstadt {
+            get {
+                return ResourceManager.GetString("name_canteen_halberstadt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Herrenkrug.
+        /// </summary>
+        internal static string name_canteen_herrenkrug {
+            get {
+                return ResourceManager.GetString("name_canteen_herrenkrug", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kellercafé.
+        /// </summary>
+        internal static string name_canteen_keller_cafe {
+            get {
+                return ResourceManager.GetString("name_canteen_keller_cafe", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uni-Campus lower hall.
+        /// </summary>
+        internal static string name_canteen_lower {
+            get {
+                return ResourceManager.GetString("name_canteen_lower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stendal.
+        /// </summary>
+        internal static string name_canteen_stendal {
+            get {
+                return ResourceManager.GetString("name_canteen_stendal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uni-Campus upper hall.
+        /// </summary>
+        internal static string name_canteen_upper {
+            get {
+                return ResourceManager.GetString("name_canteen_upper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wernigerode.
+        /// </summary>
+        internal static string name_canteen_wernigerode {
+            get {
+                return ResourceManager.GetString("name_canteen_wernigerode", resourceCulture);
             }
         }
         

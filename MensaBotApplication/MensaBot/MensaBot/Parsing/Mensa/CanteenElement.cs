@@ -10,6 +10,8 @@ namespace MensaBotParsing.Mensa
     using System.Text.RegularExpressions;
 
     using MensaBot.MessageInterpretation;
+    using MensaBot.Resources;
+    using MensaBot.Resources.Language;
 
     class CanteenElement
     {
@@ -39,8 +41,7 @@ namespace MensaBotParsing.Mensa
 
         public List<DayElement> DayElements { get; private set; }
 
-        public string [] GermanDescriptions { get; private set; }
-        public string[] EnglishDescriptions { get; private set; }
+        public string[] DescriptionId { get; private set; }
         public CanteenName CanteenName { get; private set; }
 
         #endregion
@@ -51,17 +52,21 @@ namespace MensaBotParsing.Mensa
         {
             this._pages = pages;
             this.CanteenName = canteenName;
-            this.GermanDescriptions = descriptions;
-            this.EnglishDescriptions = descriptions;
+            DescriptionId = descriptions;
+
         }
 
-        public CanteenElement(CanteenName canteenName ,string[] pages, string [] germanDescriptions, string[] englishDescriptions)
+        public string GetDescription(int index)
+        {
+            return Lang.ResourceManager.GetString(DescriptionId[index]);
+        }
+        /*public CanteenElement(CanteenName canteenName ,string[] pages, string [] germanDescriptions, string[] englishDescriptions)
         {
             this._pages = pages;
             this.CanteenName = canteenName;
             this.GermanDescriptions = germanDescriptions;
             this.EnglishDescriptions = englishDescriptions;
-        }
+        }*/
 
         #endregion
 
