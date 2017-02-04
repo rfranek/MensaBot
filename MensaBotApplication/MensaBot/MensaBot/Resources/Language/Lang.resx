@@ -366,4 +366,19 @@
   <data name="wrong_param_remove_filter" xml:space="preserve">
     <value>Did you mean /remove filter?</value>
   </data>
+  <data name="remove_help_style" xml:space="preserve">
+    <value>Use /remove style to delete your default style settings.</value>
+  </data>
+  <data name="set_help_style" xml:space="preserve">
+    <value>Use: /set style [minimum/minimum_nolines/inline/maximum] to update your meal display type.</value>
+  </data>
+  <data name="style_fail_to_add_database" xml:space="preserve">
+    <value>Fail to update style in database.</value>
+  </data>
+  <data name="style_not_found" xml:space="preserve">
+    <value>Could not find style</value>
+  </data>
+  <data name="style_update" xml:space="preserve">
+    <value>Update style to:</value>
+  </data>
 </root>

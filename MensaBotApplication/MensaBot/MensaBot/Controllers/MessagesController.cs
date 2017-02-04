@@ -113,7 +113,8 @@ namespace MensaBot
                 {
                     var message = MessageInterpreter.MarkBold(Lang.remove_help) + MessageInterpreter.DrawLine
                                 + Lang.remove_help_canteen + MessageInterpreter.DrawLine
-                                + Lang.remove_help_filter + MessageInterpreter.LineBreak;
+                                + Lang.remove_help_filter + MessageInterpreter.DrawLine
+                                + Lang.remove_help_style + MessageInterpreter.LineBreak;
 
                     return await SendResponseMessage(connector, activity, message);
 
@@ -149,6 +150,17 @@ namespace MensaBot
                     return await SendResponseMessage(connector, activity, Lang.deleted_filter);
                 }
 
+                if (activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/remove style"))
+                {
+                    string[] msgParts = activity.Text.ToLower().Replace(_botHandle, "").Split(' ');
+
+                    if (msgParts.Length != 2)
+                        return await SendResponseMessage(connector, activity, Lang.wrong_param_remove_filter);
+
+                    DatabaseUtilities.RemoveKey(mbe, DatabaseUtilities.StyleTag, activity.ChannelId, activity.Conversation.Id);
+                    return await SendResponseMessage(connector, activity, Lang.deleted_filter);
+                }
+
                 if (activity.Text.ToLower().Replace(_botHandle,"").StartsWith("/get mensa") || activity.Text.ToLower().Replace(_botHandle, "").StartsWith("/get canteen"))
                     return await SendResponseMessage(connector, activity, CommandBucket.Get.GetValue(mbe, DatabaseUtilities.DefaultMensaTag, activity.ChannelId, activity.Conversation.Id));
 
@@ -161,7 +173,8 @@ namespace MensaBot
                     {
                         var message = MessageInterpreter.MarkBold(Lang.set_help) + MessageInterpreter.DrawLine
                                     + Lang.set_help_canteen + MessageInterpreter.DrawLine 
-                                    + Lang.set_help_filter;
+                                    + Lang.set_help_filter + MessageInterpreter.DrawLine
+                                    + Lang.set_help_style;
 
                         return await SendResponseMessage(connector, activity, message);
                     }
@@ -184,8 +197,8 @@ namespace MensaBot
                     }
                     if ((setMessageParts[1].ToLower() == "style"))
                     {
-
-
+                        
+                        return await SendResponseMessage(connector, activity, CommandBucket.Get.SetStyle(setMessageParts[2], mbe, activity.ChannelId, activity.Conversation.Id));
                     }
 
                     if ((setMessageParts[1].ToLower() == "filter"))

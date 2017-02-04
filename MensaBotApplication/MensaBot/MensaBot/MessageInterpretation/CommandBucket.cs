@@ -112,6 +112,25 @@ namespace MensaBot.MessageInterpretation
             return DatabaseUtilities.GetValueBytKey(mensaBotEntities, key, channelId, conversationId);
         }
 
+        public string SetStyle(string style, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        {
+            FoodDisplayStyle foodDisplayStyle;
+
+            if (FoodDisplayStyle.TryParse(style.ToUpper(), out foodDisplayStyle))
+            {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+                if (DatabaseUtilities.AddEntry(DatabaseUtilities.StyleTag, foodDisplayStyle.ToString().ToLower(), mensaBotEntities, channelId, conversationId))
+                    return Lang.style_update + ": " + foodDisplayStyle.ToString().ToLower();
+                else
+                    return Lang.style_fail_to_add_database;
+            }
+            else
+            {
+                return Lang.style_not_found + ": " + style;
+            }
+        }
+
+
         public string SetDefaultCanteen(CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
             DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
@@ -296,23 +315,44 @@ namespace MensaBot.MessageInterpretation
                     {
                         tagResult = tagResult.Remove(tagResult.Length - 1, 1).ToLower() + ";";
                     }
-                    if (!string.IsNullOrEmpty(foodElement.Cost))
-                    {
-                        tagResult += "  " + foodElement.Cost + "€";
-                    }
 
                     string warning = null;
 
                     if (string.IsNullOrEmpty(foodElement.EnglishName.Trim()) && CultureInfo.CurrentCulture.ToString() != (new CultureInfo("de")).ToString())
                         warning = MessageInterpreter.MarkItalic(Lang.no_english_available);
 
+                    FoodDisplayStyle foodDisplayStyle = FoodDisplayStyle.none;
+                    string styleString = GetValue(mensaBotEntities, DatabaseUtilities.StyleTag, channelId, conversationId);
+                    if (!string.IsNullOrEmpty(styleString))
+                    {
+                        if (!FoodDisplayStyle.TryParse(styleString.ToUpper(), out foodDisplayStyle))
+                            foodDisplayStyle = FoodDisplayStyle.none;
+                    }
+
+                    var tagsDisplay = "";
+                    switch (foodDisplayStyle)
+                    {
+                        case FoodDisplayStyle.none:
+                        case FoodDisplayStyle.MAXIMUM:
+                            tagsDisplay = MessageInterpreter.LineBreak + tagResult + (!string.IsNullOrEmpty(foodElement.Cost) ? foodElement.Cost + "€" : "") + MessageInterpreter.DrawLine;
+                            break;
+                        case FoodDisplayStyle.MINIMUM_NOLINES:
+                            tagsDisplay = MessageInterpreter.LineBreak;
+                            break;
+                        case FoodDisplayStyle.MINIMUM:
+                            tagsDisplay = MessageInterpreter.DrawLine;
+                            break;
+                        case FoodDisplayStyle.INLINE:
+                            tagsDisplay = " " + ((tagResult.Length > 1) ? tagResult.Remove(tagResult.Length - 1, 1) : tagResult) + MessageInterpreter.DrawLine;
+                            break;
+                    }
+
                     if (!hideElement)
                     {
                         if (CultureInfo.CurrentCulture.ToString() == (new CultureInfo("de")).ToString() || warning != null)
-                            menuItems[i] += MessageInterpreter.MarkBold(foodElement.GermanName) + warning + " " + MessageInterpreter.LineBreak + tagResult + MessageInterpreter.DrawLine;
+                            menuItems[i] += MessageInterpreter.MarkBold(foodElement.GermanName) + warning + " " + tagsDisplay;
                         else
-                            menuItems[i] += MessageInterpreter.MarkBold(MessageInterpreter.FirstCharToUpper(foodElement.EnglishName)) + " " + MessageInterpreter.LineBreak + tagResult
-                                            + MessageInterpreter.DrawLine;
+                            menuItems[i] += MessageInterpreter.MarkBold(MessageInterpreter.FirstCharToUpper(foodElement.EnglishName)) + " " + tagsDisplay;
                     }
                 }
             }

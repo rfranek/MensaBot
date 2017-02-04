@@ -11,6 +11,7 @@ namespace MensaBot.MessageInterpretation
         public const string DefaultMensaTag = "DefaultCanteen";
         public const string IgnoreTags = "IgnoreTags";
         public const string LanguageTag = "Language";
+        public const string StyleTag = "Style";
 
         public static bool RemoveKey(MensaBotEntities mensaBotEntities, string key, string channelId, string coversationId)
         {

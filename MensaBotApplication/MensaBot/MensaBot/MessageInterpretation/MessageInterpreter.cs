@@ -262,4 +262,14 @@ namespace MensaBot.MessageInterpretation
 
         none
     }
+
+    public enum FoodDisplayStyle
+    {
+        MINIMUM,
+        MINIMUM_NOLINES,
+        INLINE,
+        MAXIMUM,
+
+        none
+    }
 }

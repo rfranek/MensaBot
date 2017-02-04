@@ -324,7 +324,7 @@
     <value>Nutze: /set mensa [mensa name] um eine Standartmensa zu definieren.</value>
   </data>
   <data name="set_help_filter" xml:space="preserve">
-    <value>Nutze: /set filter [filterA],[filterB].... um Mahlzeiten die durch den Tag gekennzeichnet werden sind zu ignorieren, zum Beispiel /set filter wild,fish,knoblauch</value>
+    <value>Nutze: /set filter [filterA],[filterB].... um Mahlzeiten die durch den Tag gekennzeichnet werden sind zu ignorieren, zum Beispiel /set filter Wild,Fisch,Knoblauch</value>
   </data>
   <data name="start_exit" xml:space="preserve">
     <value>Ich kann dir helfen das Problem zu lösen.</value>
@@ -361,5 +361,17 @@
   </data>
   <data name="help_delete_all_data" xml:space="preserve">
     <value>um alle deine Standardeinstellungen zu löschen.</value>
+  </data>
+  <data name="set_help_style" xml:space="preserve">
+    <value>Nutze: /set style [minimum/minimum_nolines/inline/maximum] um die Darstellungsform deiner Mahlzeitenanzeige zu ändern.</value>
+  </data>
+  <data name="style_not_found" xml:space="preserve">
+    <value>Unbekannte Darstellung. Nutze /set help für weitere Hilfe.</value>
+  </data>
+  <data name="style_update" xml:space="preserve">
+    <value>Darstellungsform wurde aktualisiert</value>
+  </data>
+  <data name="remove_help_style" xml:space="preserve">
+    <value>Lösche deine Mahlzeitendarstellungsform mit /remove style.</value>
   </data>
 </root>
