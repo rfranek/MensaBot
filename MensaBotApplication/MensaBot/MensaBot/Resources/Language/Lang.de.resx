@@ -238,7 +238,7 @@
     <value>legende</value>
   </data>
   <data name="language_help" xml:space="preserve">
-    <value>Nutze /language name. Zum Beispiel: /language en or /language de.</value>
+    <value>Nutze /set language name. Zum Beispiel: /set language en or /set language de.</value>
   </data>
   <data name="list_canteen_description" xml:space="preserve">
     <value>/list canteens - Zeigt alle Mensen und deren Shortkeys.</value>

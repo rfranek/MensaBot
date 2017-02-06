@@ -124,7 +124,7 @@
     <value>Can't add default canteen.</value>
   </data>
   <data name="add_language" xml:space="preserve">
-    <value>Added language</value>
+    <value>Update language</value>
   </data>
   <data name="add_language_failed" xml:space="preserve">
     <value>Can't add language</value>
@@ -250,7 +250,7 @@
     <value>key</value>
   </data>
   <data name="language_help" xml:space="preserve">
-    <value>Please use /langugae name. E.g. /language en or /language de.</value>
+    <value>Please use /set langugae name. E.g. /set language en or /set language de.</value>
   </data>
   <data name="list_canteen_description" xml:space="preserve">
     <value>/list canteens - Shows all canteens and their shortcuts.</value>

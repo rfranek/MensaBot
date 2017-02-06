@@ -130,6 +130,146 @@ namespace MensaBot.MessageInterpretation
             }
         }
 
+        public string RemoveDefaults(string activityMessage, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        {
+            if (activityMessage.StartsWith("/remove mensa") || activityMessage.StartsWith("/remove canteen"))
+            {
+                string[] msgParts = activityMessage.Split(' ');
+
+                if (msgParts.Length != 2)
+                    return Lang.wrong_param_remove_canteen;
+
+                bool containsCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, msgParts[1]);
+
+                if (containsCommand)
+                    return CommandBucket.Get.CreateUnknownCommand();
+                else
+                {
+                    DatabaseUtilities.RemoveKey(mensaBotEntities, DatabaseUtilities.DefaultMensaTag, channelId, conversationId);
+                    return Lang.deleted_canteen;
+                }
+
+            }
+
+            if (activityMessage.StartsWith("/remove filter"))
+            {
+                string[] msgParts = activityMessage.Split(' ');
+
+                if (msgParts.Length != 2)
+                    return Lang.wrong_param_remove_filter;
+
+                DatabaseUtilities.RemoveKey(mensaBotEntities, DatabaseUtilities.IgnoreTags, channelId, conversationId);
+                return Lang.deleted_filter;
+            }
+
+            if (activityMessage.StartsWith("/remove style"))
+            {
+                string[] msgParts = activityMessage.Split(' ');
+
+                if (msgParts.Length != 2)
+                    return Lang.wrong_param_remove_filter;
+
+                DatabaseUtilities.RemoveKey(mensaBotEntities, DatabaseUtilities.StyleTag, channelId, conversationId);
+                return Lang.deleted_filter;
+            }
+
+            if (activityMessage.StartsWith("/remove help"))
+            {
+                var message = MessageInterpreter.MarkBold(Lang.remove_help) + MessageInterpreter.DrawLine
+                            + Lang.remove_help_canteen + MessageInterpreter.DrawLine
+                            + Lang.remove_help_filter + MessageInterpreter.DrawLine
+                            + Lang.remove_help_style + MessageInterpreter.LineBreak;
+
+                return message;
+            }
+
+            return Lang.command_help_intro +" /remove help " + Lang.help_default_settings_remove;
+        }
+
+
+        public string SetDefaults(string activityMessage, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        {
+            if (activityMessage.StartsWith("/set help"))
+            {
+                var message = MessageInterpreter.MarkBold(Lang.set_help) + MessageInterpreter.DrawLine
+                            + Lang.set_help_canteen + MessageInterpreter.DrawLine
+                            + Lang.set_help_filter + MessageInterpreter.DrawLine
+                            + Lang.set_help_style + MessageInterpreter.DrawLine
+                            + Lang.language_help;
+
+                return message;
+            }
+
+            string[] setMessageParts = activityMessage.Remove(0, 1).ToLower().Split(' ');
+
+            if (setMessageParts.Length != 3)
+                return Lang.set_fail;
+
+            bool containsCommand = MessageInterpreter.Get.ContainsCommands(MessageInterType.MAIN_COMMAND, setMessageParts[1]);
+
+            if (containsCommand)
+            {
+                CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setMessageParts[2]);
+
+                if (canteenName == CanteenName.none)
+                    return Lang.canteen_not_found + " " + MessageInterpreter.MarkBold(setMessageParts[2]);
+
+                return CommandBucket.Get.SetDefaultCanteen(canteenName, mensaBotEntities, channelId, conversationId);
+            }
+
+            if (setMessageParts[1] == "language")
+            {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+
+                var lang = activityMessage.Split(' ');
+                if (lang.Length != 3)
+                    return Lang.language_help;
+
+                return CommandBucket.Get.SetLanguage(mensaBotEntities, lang[2], channelId, conversationId);
+            }
+
+
+            if ((setMessageParts[1].ToLower() == "style"))
+            {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+                return CommandBucket.Get.SetStyle(setMessageParts[2], mensaBotEntities, channelId, conversationId);
+            }
+
+            if ((setMessageParts[1].ToLower() == "filter"))
+            {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+
+                var tags = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
+                var tagsAdditional = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
+
+                if (tags != null && tagsAdditional != null)
+                    tags.AddRange(tagsAdditional);
+                if (tags == null && tagsAdditional != null)
+                    tags = tagsAdditional;
+
+                if (tags == null)
+                    return Lang.failed_sorry + MessageInterpreter.LineBreak + Lang.add_tags_failed;
+
+                tags = tags.Distinct().ToList();
+
+                string enumToString = "";
+                string displayString = "";
+                for (int i = 0; i < tags.Count - 1; i++)
+                {
+                    enumToString += tags[i].ToString().ToLower() + MessageInterpreter.ParamDivider;
+                    displayString += FoodElement.FoodTagsToString(tags[i]) + MessageInterpreter.ParamDivider;
+                }
+                enumToString += tags[tags.Count - 1].ToString().ToLower();
+                displayString += FoodElement.FoodTagsToString(tags[tags.Count - 1]);
+
+                if (DatabaseUtilities.AddEntry(DatabaseUtilities.IgnoreTags, enumToString, mensaBotEntities, channelId, conversationId))
+                    return Lang.add_tags + " " + MessageInterpreter.MarkBold(displayString);
+                else
+                    return Lang.add_tags_failed + MessageInterpreter.LineBreak + Lang.add_tags_failed;
+            }
+
+            return CommandBucket.Get.CreateUnknownCommand();
+        }
 
         public string SetDefaultCanteen(CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
