@@ -12,6 +12,7 @@ namespace MensaBot.MessageInterpretation
         public const string IgnoreTags = "IgnoreTags";
         public const string LanguageTag = "Language";
         public const string StyleTag = "Style";
+        public const string Trigger = "Trigger";
 
         public static bool RemoveKey(MensaBotEntities mensaBotEntities, string key, string channelId, string coversationId)
         {
@@ -97,6 +98,40 @@ namespace MensaBot.MessageInterpretation
 
         }
 
+        public static List<Chat> GetChatTrigger(MensaBotEntities mensaBotEntities, string trigger)
+        {
+            try
+            {
+                var chats = mensaBotEntities.Chats.Where(t => t.Settings.Any()).ToList();
+
+                if (chats == null)
+                    return null;
+
+                List<Chat> chatsWithTrigger = new List<Chat>();
+
+                foreach (var chat in chats)
+                {
+                    var settings = chat.Settings.FirstOrDefault(t => t.Key == DatabaseUtilities.Trigger);
+                    if (settings == null)
+                        continue;
+                    
+                    if (settings.Value == trigger)
+                        chatsWithTrigger.Add(chat);
+                }
+
+
+                return chatsWithTrigger;
+
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+            return null;
+
+        }
+
         public static bool RemoveAllSettingsAndChat(MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
             if ((mensaBotEntities.Chats.Any(t => t.ConversationId == conversationId && t.ChannelId == channelId)))
@@ -117,7 +152,7 @@ namespace MensaBot.MessageInterpretation
             return false;
         }
 
-        public static bool CreateChatEntry(MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public static bool CreateChatEntry(MensaBotEntities mensaBotEntities, string channelId, string conversationId, string serviceURL)
         {
             if (!(mensaBotEntities.Chats.Any(t => t.ConversationId == conversationId && t.ChannelId == channelId)))
             {
@@ -126,6 +161,7 @@ namespace MensaBot.MessageInterpretation
                     {
                         ChannelId = channelId,
                         ConversationId = conversationId,
+                        ServiceURL = serviceURL,
                         Settings = new List<Setting>
                         {
                             new Setting

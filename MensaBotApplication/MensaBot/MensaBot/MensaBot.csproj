@@ -144,6 +144,7 @@
       <DependentUpon>DataDBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Controllers\TriggerController.cs" />
     <Compile Include="DataDBModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -211,6 +212,7 @@
       <DependentUpon>DataDBModel.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\mensabotmd - Web Deploy.pubxml" />
+    <Content Include="Properties\webjobs-list.json" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -281,6 +283,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.12\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

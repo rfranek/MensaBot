@@ -5,8 +5,10 @@ namespace MensaBot.MessageInterpretation
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Text.RegularExpressions;
 
     using MensaBot.Resources.CanteenNames;
+    using MensaBot.Resources.Dates;
     using MensaBot.Resources.Language;
 
     using MensaBotParsing.Mensa;
@@ -59,8 +61,6 @@ namespace MensaBot.MessageInterpretation
             text += MessageInterpreter.DrawLine;
             text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("deleteData") + " " + Lang.help_delete_all_data;
             text += MessageInterpreter.DrawLine;
-            text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold("language") + " " + Lang.help_set_language;
-            text += MessageInterpreter.DrawLine;
             text += Lang.command_help_intro + " /" + MessageInterpreter.MarkBold(Lang.key) + " " + Lang.help_emoji_description;
             text += MessageInterpreter.DrawLine;
             text += MessageInterpreter.MarkBold(Lang.please_note) + ": " + Lang.reference_1 + MessageInterpreter.LineBreak;
@@ -73,19 +73,19 @@ namespace MensaBot.MessageInterpretation
         {
             string text = "";
 
-            text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + Lang.food_tag_alcohol.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + Lang.food_tag_beef.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + Lang.food_tag_bio.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + Lang.food_tag_chicken.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + Lang.food_tag_fish.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + Lang.food_tag_garlic.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + Lang.food_tag_hogget.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + Lang.food_tag_pork.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + Lang.food_tag_soup.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " " + Lang.canteen + " " + Lang.food_tag_vital.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + Lang.food_tag_vegan.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + Lang.food_tag_vegetarian.ToLower() + MessageInterpreter.LineBreak;
-            text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + Lang.food_tag_vension.ToLower() + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.ALCOHOL) + " " + Lang.food_tag_alcohol + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.BEEF) + " " + Lang.food_tag_beef + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.BIO) + " " + Lang.food_tag_bio + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.CHICKEN) + " " + Lang.food_tag_chicken + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.FISH) + " " + Lang.food_tag_fish + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.GARLIC) + " " + Lang.food_tag_garlic + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.HOGGET) + " " + Lang.food_tag_hogget + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.PORK) + " " + Lang.food_tag_pork + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.SOUP) + " " + Lang.food_tag_soup + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VITAL) + " " + Lang.canteen + " " + Lang.food_tag_vital + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGAN) + " " + Lang.food_tag_vegan + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VEGETARIAN) + " " + Lang.food_tag_vegetarian + MessageInterpreter.LineBreak;
+            text += FoodElement.FoodTagsToEmoji(FoodTags.VENSION) + " " + Lang.food_tag_vension + MessageInterpreter.LineBreak;
 
             return text;
         }
@@ -107,18 +107,100 @@ namespace MensaBot.MessageInterpretation
 
         }
 
+        public string SetTrigger(MensaBotEntities mensaBotEntities, string trigger, string channelId, string conversationId)
+        {
+            Regex r = new Regex("2[0-3]:[0-5][0-9]|[0-1][0-9]:[0-5][0-9]", RegexOptions.IgnoreCase);
+
+            Match m = r.Match(trigger);
+
+            if (!m.Success || trigger.Length != 5)
+            {
+                return Lang.regex_not_matched +" " + trigger+ " "+ trigger.Length;
+            }
+
+
+            var smoothTime = SmoothTime(trigger);
+
+            if (DatabaseUtilities.AddEntry(DatabaseUtilities.Trigger, smoothTime, mensaBotEntities, channelId, conversationId))
+                return Lang.set_time_tigger + " " + smoothTime;
+            else
+                return Lang.failed_set_trigger + " " + smoothTime;
+
+        }
+
+        public string SmoothTime(string timeString)
+        {
+            var time = Array.ConvertAll(timeString.Split(':'), int.Parse);
+
+            if (time[1] < 15)
+                time[1] = 0;
+            if (time[1] >= 15 && time[1] < 45)
+                time[1] = 30;
+            if (time[1] >= 45)
+            {
+                time[1] = 0;
+                time[0] = time[0] + 1;
+            }
+
+            var hoursToString = ((time[0].ToString().Length == 1) ? "0" + time[0].ToString() : time[0].ToString());
+            var minutesToString = ((time[1] == 0) ? "00" : time[1].ToString());
+
+            return hoursToString + ":" + minutesToString;
+        }
+
+        public bool SendTrigger(string trigger)
+        {
+            MensaBotEntities mensaBotEntities = new MensaBotEntities();
+
+            List<Chat> chats = DatabaseUtilities.GetChatTrigger(mensaBotEntities, trigger);
+            if (chats == null)
+                return false;
+
+            foreach (var chat in chats)
+            {
+                string definedLanguage = CommandBucket.Get.GetValue(mensaBotEntities, DatabaseUtilities.LanguageTag, chat.ChannelId, chat.ConversationId);
+
+                if (definedLanguage == null)
+                    definedLanguage = "en";
+
+                CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(definedLanguage);
+                CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(definedLanguage);
+
+                string[] results = CommandBucket.Get.CreateMensaReply(Dates.today, null, mensaBotEntities, chat.ChannelId, chat.ConversationId);
+
+                ConnectorClient connector2 = new ConnectorClient(new Uri(chat.ServiceURL));
+
+                foreach (var result in results)
+                {
+                    connector2.Conversations.SendToConversationAsync(
+                        new Activity
+                        {
+                            Type = ActivityTypes.Message,
+                            ChannelId = chat.ChannelId,
+                            Conversation = new ConversationAccount(id: chat.ConversationId),
+                            From = new ChannelAccount(id: "mensa_md_bot", name: "mensa_md_bot"),
+                            Text = result
+                        });
+
+                }
+            }
+
+            return chats.Count > 0;
+        }
+
+
         public string GetValue(MensaBotEntities mensaBotEntities, string key ,string channelId, string conversationId)
         {
             return DatabaseUtilities.GetValueBytKey(mensaBotEntities, key, channelId, conversationId);
         }
 
-        public string SetStyle(string style, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string SetStyle(string style, MensaBotEntities mensaBotEntities, string channelId, string conversationId, string serviceURL)
         {
             FoodDisplayStyle foodDisplayStyle;
 
             if (FoodDisplayStyle.TryParse(style.ToUpper(), out foodDisplayStyle))
             {
-                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
                 if (DatabaseUtilities.AddEntry(DatabaseUtilities.StyleTag, foodDisplayStyle.ToString().ToLower(), mensaBotEntities, channelId, conversationId))
                     return Lang.style_update + ": " + foodDisplayStyle.ToString().ToLower();
                 else
@@ -132,7 +214,7 @@ namespace MensaBot.MessageInterpretation
 
         public string RemoveDefaults(string activityMessage, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
         {
-            if (activityMessage.StartsWith("/remove mensa") || activityMessage.StartsWith("/remove canteen"))
+            if (activityMessage.StartsWith("remove mensa") || activityMessage.StartsWith("remove canteen"))
             {
                 string[] msgParts = activityMessage.Split(' ');
 
@@ -151,7 +233,7 @@ namespace MensaBot.MessageInterpretation
 
             }
 
-            if (activityMessage.StartsWith("/remove filter"))
+            if (activityMessage.StartsWith("remove filter"))
             {
                 string[] msgParts = activityMessage.Split(' ');
 
@@ -162,7 +244,7 @@ namespace MensaBot.MessageInterpretation
                 return Lang.deleted_filter;
             }
 
-            if (activityMessage.StartsWith("/remove style"))
+            if (activityMessage.StartsWith("remove style"))
             {
                 string[] msgParts = activityMessage.Split(' ');
 
@@ -173,7 +255,18 @@ namespace MensaBot.MessageInterpretation
                 return Lang.deleted_filter;
             }
 
-            if (activityMessage.StartsWith("/remove help"))
+            if (activityMessage.StartsWith("remove trigger"))
+            {
+                string[] msgParts = activityMessage.Split(' ');
+
+                if (msgParts.Length != 2)
+                    return Lang.wrong_param_remove_filter;
+
+                DatabaseUtilities.RemoveKey(mensaBotEntities, DatabaseUtilities.Trigger, channelId, conversationId);
+                return Lang.deleted_filter;
+            }
+
+            if (activityMessage.StartsWith("remove help"))
             {
                 var message = MessageInterpreter.MarkBold(Lang.remove_help) + MessageInterpreter.DrawLine
                             + Lang.remove_help_canteen + MessageInterpreter.DrawLine
@@ -187,14 +280,15 @@ namespace MensaBot.MessageInterpretation
         }
 
 
-        public string SetDefaults(string activityMessage, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string SetDefaults(string activityMessage, MensaBotEntities mensaBotEntities, string channelId, string conversationId, string serviceURL)
         {
-            if (activityMessage.StartsWith("/set help"))
+            if (activityMessage.StartsWith("set help"))
             {
                 var message = MessageInterpreter.MarkBold(Lang.set_help) + MessageInterpreter.DrawLine
                             + Lang.set_help_canteen + MessageInterpreter.DrawLine
                             + Lang.set_help_filter + MessageInterpreter.DrawLine
                             + Lang.set_help_style + MessageInterpreter.DrawLine
+                            + Lang.set_help_trigger + MessageInterpreter.DrawLine
                             + Lang.language_help;
 
                 return message;
@@ -209,17 +303,18 @@ namespace MensaBot.MessageInterpretation
 
             if (containsCommand)
             {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
                 CanteenName canteenName = MessageInterpreter.Get.FindCanteen(setMessageParts[2]);
 
                 if (canteenName == CanteenName.none)
                     return Lang.canteen_not_found + " " + MessageInterpreter.MarkBold(setMessageParts[2]);
 
-                return CommandBucket.Get.SetDefaultCanteen(canteenName, mensaBotEntities, channelId, conversationId);
+                return CommandBucket.Get.SetDefaultCanteen(canteenName, mensaBotEntities, channelId, conversationId, serviceURL);
             }
 
             if (setMessageParts[1] == "language")
             {
-                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
 
                 var lang = activityMessage.Split(' ');
                 if (lang.Length != 3)
@@ -228,16 +323,27 @@ namespace MensaBot.MessageInterpretation
                 return CommandBucket.Get.SetLanguage(mensaBotEntities, lang[2], channelId, conversationId);
             }
 
+            if (setMessageParts[1] == "trigger")
+            {
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
+
+                var time = activityMessage.Split(' ');
+                if (time.Length != 3)
+                    return Lang.fail_so_define_trigger;
+
+                return CommandBucket.Get.SetTrigger(mensaBotEntities, time[2], channelId, conversationId);
+            }
+
 
             if ((setMessageParts[1].ToLower() == "style"))
             {
-                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
-                return CommandBucket.Get.SetStyle(setMessageParts[2], mensaBotEntities, channelId, conversationId);
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
+                return CommandBucket.Get.SetStyle(setMessageParts[2], mensaBotEntities, channelId, conversationId, serviceURL);
             }
 
             if ((setMessageParts[1].ToLower() == "filter"))
             {
-                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+                DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
 
                 var tags = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
                 var tagsAdditional = CommandBucket.Get.SetIgnoreTags(setMessageParts[2], MessageInterpreter.ParamDivider);
@@ -271,9 +377,9 @@ namespace MensaBot.MessageInterpretation
             return CommandBucket.Get.CreateUnknownCommand();
         }
 
-        public string SetDefaultCanteen(CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string SetDefaultCanteen(CanteenName defaultCanteen, MensaBotEntities mensaBotEntities, string channelId, string conversationId, string serviceURL)
         {
-            DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId);
+            DatabaseUtilities.CreateChatEntry(mensaBotEntities, channelId, conversationId, serviceURL);
 
             if (DatabaseUtilities.AddEntry(DatabaseUtilities.DefaultMensaTag, defaultCanteen.ToString(), mensaBotEntities, channelId, conversationId))
                 return Lang.add_canteen;
@@ -502,7 +608,8 @@ namespace MensaBot.MessageInterpretation
 
         public string CreateStartMessage()
         {
-            string text = MessageInterpreter.MarkBold(Lang.start_welcome) + " " + Lang.start_intro + MessageInterpreter.LineBreak + Lang.start_exit;
+            string text = MessageInterpreter.MarkBold(Lang.start_welcome) + " " + Lang.start_intro + MessageInterpreter.LineBreak + Lang.start_exit + MessageInterpreter.LineBreak
+                + Lang.command_help_intro + " " + MessageInterpreter.MarkBold("\"" + Lang.command_help + "\"") + " " + Lang.command_help_exit;
 
             return text;
         }

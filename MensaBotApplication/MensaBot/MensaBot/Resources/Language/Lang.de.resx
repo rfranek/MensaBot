@@ -292,7 +292,7 @@
     <value>Alle Daten über dich wurden gelöscht.</value>
   </data>
   <data name="removed_all_data_failed" xml:space="preserve">
-    <value>Fehler! Deine Daten konnten leider nicht gelöscht werden 💔.</value>
+    <value>Fehler! Deine Daten konnten leider nicht gelöscht werden 💔. Vielleicht existieren keine Daten über dich.</value>
   </data>
   <data name="remove_help" xml:space="preserve">
     <value>Hilfe für /remove</value>
@@ -363,7 +363,7 @@
     <value>um alle deine Standardeinstellungen zu löschen.</value>
   </data>
   <data name="set_help_style" xml:space="preserve">
-    <value>Nutze: /set style [minimum/minimum_nolines/inline/maximum] um die Darstellungsform deiner Mahlzeitenanzeige zu ändern.</value>
+    <value>Nutze: /set style minimum/minimum_nolines/inline/maximum um die Darstellungsform deiner Mahlzeitenanzeige zu ändern.</value>
   </data>
   <data name="style_not_found" xml:space="preserve">
     <value>Unbekannte Darstellung. Nutze /set help für weitere Hilfe.</value>
@@ -373,5 +373,23 @@
   </data>
   <data name="remove_help_style" xml:space="preserve">
     <value>Lösche deine Mahlzeitendarstellungsform mit /remove style.</value>
+  </data>
+  <data name="set_help_trigger" xml:space="preserve">
+    <value>Nutze: /set trigger mm:hh um eine automatische Nachricht vom Bot um mm:hh über das heutige Mensaangebot zu erhalten.</value>
+  </data>
+  <data name="deleted_trigger" xml:space="preserve">
+    <value>Trigger gelöscht, falls er existiert hat.</value>
+  </data>
+  <data name="fail_so_define_trigger" xml:space="preserve">
+    <value>Trigger konnte nicht gesetzt werden.</value>
+  </data>
+  <data name="regex_not_matched" xml:space="preserve">
+    <value>Regex passt nicht.</value>
+  </data>
+  <data name="set_time_tigger" xml:space="preserve">
+    <value>Trigger wurde gesetzt.</value>
+  </data>
+  <data name="failed_set_trigger" xml:space="preserve">
+    <value>Trigger konnte nicht gesetzt werden.</value>
   </data>
 </root>

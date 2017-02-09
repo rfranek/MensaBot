@@ -72,10 +72,10 @@ namespace MensaBot
                 if (chatMessage.StartsWith("pong"))
                     return await SendResponseMessage(connector, activity, commandMessage, (_random.Next(10) > 8 ? Lang.ping : Lang.not_play_ping_pong));
 
-                if (chatMessage.StartsWith("key") || activity.Text.StartsWith("legende"))
+                if (chatMessage.StartsWith("key") || chatMessage.StartsWith("legende"))
                     return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.CreateKeyMessage());
 
-                if (chatMessage.StartsWith("deletedata"))
+                if (chatMessage.StartsWith("deletedata") || chatMessage.StartsWith("stop"))
                 {
                     bool result = DatabaseUtilities.RemoveAllSettingsAndChat(mbe, activity.ChannelId, activity.Conversation.Id);
                     return await SendResponseMessage(connector, activity, commandMessage, (result == true ? Lang.removed_all_data : Lang.removed_all_data_failed + MessageInterpreter.LineBreak + Lang.failed_sorry));
@@ -94,7 +94,7 @@ namespace MensaBot
                     return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.GetValue(mbe, DatabaseUtilities.LanguageTag, activity.ChannelId, activity.Conversation.Id));
 
                 if (chatMessage.StartsWith("set"))
-                    return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.SetDefaults(chatMessage, mbe, activity.ChannelId, activity.Conversation.Id));
+                    return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.SetDefaults(chatMessage, mbe, activity.ChannelId, activity.Conversation.Id, activity.ServiceUrl));
 
                 if (chatMessage.StartsWith("list canteen") || chatMessage.StartsWith("list mensen"))
                     return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.CreateListCanteensMessage());

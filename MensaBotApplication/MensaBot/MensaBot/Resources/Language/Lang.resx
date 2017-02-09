@@ -316,7 +316,7 @@
     <value>Removed all data from you!</value>
   </data>
   <data name="removed_all_data_failed" xml:space="preserve">
-    <value>Can't remove data from you.</value>
+    <value>Can't remove data from you. Maybe they don't exists.</value>
   </data>
   <data name="remove_help" xml:space="preserve">
     <value>Help for /remove</value>
@@ -370,7 +370,7 @@
     <value>Use /remove style to delete your default style settings.</value>
   </data>
   <data name="set_help_style" xml:space="preserve">
-    <value>Use: /set style [minimum/minimum_nolines/inline/maximum] to update your meal display type.</value>
+    <value>Use: /set style minimum/minimum_nolines/inline/maximum to update your meal display type.</value>
   </data>
   <data name="style_fail_to_add_database" xml:space="preserve">
     <value>Fail to update style in database.</value>
@@ -380,5 +380,23 @@
   </data>
   <data name="style_update" xml:space="preserve">
     <value>Update style to:</value>
+  </data>
+  <data name="set_help_trigger" xml:space="preserve">
+    <value>Use: /set trigger mm:hh to define a trigger which shows you your result for /canteen automaticly.</value>
+  </data>
+  <data name="deleted_trigger" xml:space="preserve">
+    <value>Removed trigger, if exists.</value>
+  </data>
+  <data name="fail_so_define_trigger" xml:space="preserve">
+    <value>Fail to define trigger.</value>
+  </data>
+  <data name="regex_not_matched" xml:space="preserve">
+    <value>Regex not matched.</value>
+  </data>
+  <data name="set_time_tigger" xml:space="preserve">
+    <value>Time was set:</value>
+  </data>
+  <data name="failed_set_trigger" xml:space="preserve">
+    <value>Failed to set trigger:</value>
   </data>
 </root>
