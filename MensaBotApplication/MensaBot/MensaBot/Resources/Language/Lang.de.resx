@@ -311,9 +311,6 @@
   <data name="remove_help_filter" xml:space="preserve">
     <value>Lösche alle Filter mit /remove filter</value>
   </data>
-  <data name="remove_help_filter1" xml:space="preserve">
-    <value>Use: /remove filter to delete all filter settings.</value>
-  </data>
   <data name="set_fail" xml:space="preserve">
     <value>Das hat nicht funktioniert. Nutze: /set help</value>
   </data>
@@ -391,5 +388,8 @@
   </data>
   <data name="failed_set_trigger" xml:space="preserve">
     <value>Trigger konnte nicht gesetzt werden.</value>
+  </data>
+  <data name="remove_help_trigger" xml:space="preserve">
+    <value>Lösche trigger mit /remove trigger.</value>
   </data>
 </root>

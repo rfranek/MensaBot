@@ -166,7 +166,7 @@ namespace MensaBot.MessageInterpretation
                 CultureInfo.CurrentCulture = CultureInfo.GetCultureInfo(definedLanguage);
                 CultureInfo.CurrentUICulture = CultureInfo.GetCultureInfo(definedLanguage);
 
-                string[] results = CommandBucket.Get.CreateMensaReply(Dates.today, null, mensaBotEntities, chat.ChannelId, chat.ConversationId);
+                string[] results = CommandBucket.Get.CreateMensaReply(Dates.today, null, mensaBotEntities, chat.ChannelId, chat.ConversationId, true);
 
                 ConnectorClient connector2 = new ConnectorClient(new Uri(chat.ServiceURL));
 
@@ -271,6 +271,7 @@ namespace MensaBot.MessageInterpretation
                 var message = MessageInterpreter.MarkBold(Lang.remove_help) + MessageInterpreter.DrawLine
                             + Lang.remove_help_canteen + MessageInterpreter.DrawLine
                             + Lang.remove_help_filter + MessageInterpreter.DrawLine
+                            + Lang.remove_help_trigger + MessageInterpreter.DrawLine
                             + Lang.remove_help_style + MessageInterpreter.LineBreak;
 
                 return message;
@@ -420,7 +421,7 @@ namespace MensaBot.MessageInterpretation
                    + Lang.command_help_intro + " " + MessageInterpreter.MarkBold("\""+Lang.command_help+"\"") + " " + Lang.command_help_exit;
         }
 
-        public string [] CreateMensaReply(string paramFirst, string paramSecond, MensaBotEntities mensaBotEntities, string channelId, string conversationId)
+        public string [] CreateMensaReply(string paramFirst, string paramSecond, MensaBotEntities mensaBotEntities, string channelId, string conversationId, bool forceDate)
         {
             bool isShortRequest = false;
             //check if paramFirst is date, if true -> change order
@@ -482,7 +483,7 @@ namespace MensaBot.MessageInterpretation
 
             try
             {
-                if (isShortRequest)
+                if (isShortRequest && !forceDate)
                 {
                     int maxDays = 3;
                     for (int i = 0; i < maxDays; i++)

@@ -118,7 +118,7 @@ namespace MensaBot
                     return await SendResponseMessage(connector, activity, commandMessage, CommandBucket.Get.CreateUnknownCommand());
 
 
-                string[] results = CommandBucket.Get.CreateMensaReply(expectedMessageParts[1], expectedMessageParts[2], mbe, activity.ChannelId,activity.Conversation.Id);
+                string[] results = CommandBucket.Get.CreateMensaReply(expectedMessageParts[1], expectedMessageParts[2], mbe, activity.ChannelId,activity.Conversation.Id, false);
 
                 foreach (var result in results)
                 {

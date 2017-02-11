@@ -399,4 +399,7 @@
   <data name="failed_set_trigger" xml:space="preserve">
     <value>Failed to set trigger:</value>
   </data>
+  <data name="remove_help_trigger" xml:space="preserve">
+    <value>Use /remove trigger to delete your default trigger.</value>
+  </data>
 </root>
